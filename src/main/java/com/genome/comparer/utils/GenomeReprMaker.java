@@ -101,7 +101,7 @@ public class GenomeReprMaker {
             .collect(Collectors.toList());
     }
 
-    private List<BlockRepr> getBlockReprs(List<Square> squares) {
+    public List<BlockRepr> getBlockReprs(List<Square> squares) {
         List<BlockRepr> blockReprs = new ArrayList<>();
         BlockRepr blockRepr = new BlockRepr();
         boolean isFirst = true;

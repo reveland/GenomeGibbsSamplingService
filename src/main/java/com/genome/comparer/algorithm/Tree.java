@@ -104,12 +104,12 @@ public class Tree {
         int x = Utils.random.nextInt(adjacencies.getAdjacencies().size());
         root.calculateSankoff(x);
 
-        LOGGER.info("\nnumber of optimal labelling: {}\nindividual scores: {}",
-            ((root.sankoffscore[0] <= root.sankoffscore[1]
-                ? root.sankoffsum[0] : 0)
-                + (root.sankoffscore[1] <= root.sankoffscore[0]
-                ? root.sankoffsum[1] : 0)),
-            root.sankoffsum[0] + ", " + root.sankoffsum[1]);
+        //        LOGGER.debug("\nnumber of optimal labelling: {}\nindividual scores: {}",
+        //            ((root.sankoffscore[0] <= root.sankoffscore[1]
+        //                ? root.sankoffsum[0] : 0)
+        //                + (root.sankoffscore[1] <= root.sankoffscore[0]
+        //                ? root.sankoffsum[1] : 0)),
+        //            root.sankoffsum[0] + ", " + root.sankoffsum[1]);
 
         root.sankoffmark[0] = root.sankoffscore[0] <= root.sankoffscore[1];
         root.sankoffmark[1] = root.sankoffscore[1] <= root.sankoffscore[0];

@@ -40,4 +40,11 @@ public class Genome {
     public void setCircular(final boolean circular) {
         this.circular = circular;
     }
+
+    @Override
+    public String toString() {
+        return "Genome{" +
+            "name='" + name + '\'' +
+            "}\n";
+    }
 }

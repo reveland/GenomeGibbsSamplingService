@@ -50,6 +50,7 @@ public class ComparerController {
 
     @RequestMapping(value = "/start", method = RequestMethod.GET)
     public void start() throws IOException {
+        LOGGER.info("start");
 
         List<Genome> genomes = GenomeReader.read(inputGenomePath);
 
@@ -72,6 +73,7 @@ public class ComparerController {
 
     @RequestMapping(value = "/stop", method = RequestMethod.GET)
     public void stop() {
+        LOGGER.info("stop");
         if (gibbsSamplerThread != null) {
             gibbsSamplerThread.stop();
             gibbsSamplerThread = null;
@@ -83,12 +85,13 @@ public class ComparerController {
     @RequestMapping(value = "/genome", method = RequestMethod.GET)
     public ComparerData getGenome(@RequestParam String refGenomeName, @RequestParam String genomeName1,
         @RequestParam String genomeName2) {
+        LOGGER.info("get genome");
 
         Tree treeFromTask = gibbsSamplerTask.getTree();
         FingerprintToGenomeConverter fingerprintConverter = new FingerprintToGenomeConverter(treeFromTask.adjacencies);
         List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
         Map<String, Genome> genomesMap = genomes.stream()
-            .collect(Collectors.toMap(genome -> genome.getName(), genome -> genome));
+            .collect(Collectors.toMap(Genome::getName, genome -> genome));
 
         Genome genome1 = genomesMap.get(genomeName1);
         Genome genome2 = genomesMap.get(genomeName2);
@@ -107,8 +110,31 @@ public class ComparerController {
         return genomeReprMaker.makeComparerData(listOfSquareListsR, listOfSquareLists1, listOfSquareLists2);
     }
 
+    @RequestMapping(value = "/one", method = RequestMethod.GET)
+    public Genome getOneGenome(@RequestParam String genomeName) {
+        LOGGER.info("get one genome");
+
+        Tree treeFromTask = gibbsSamplerTask.getTree();
+        FingerprintToGenomeConverter fingerprintConverter = new FingerprintToGenomeConverter(treeFromTask.adjacencies);
+        List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
+        Map<String, Genome> genomesMap = genomes.stream()
+            .collect(Collectors.toMap(Genome::getName, genome -> genome));
+
+        Genome genome = genomesMap.get(genomeName);
+
+        List<Chromosome> originalChromosomes = genome.original;
+
+        LOGGER.info("list of genomes: {}\n", genomes);
+        LOGGER.info("genome original: {}\n", fingerprintConverter.convert(genomeName, genome.fingerprint).original);
+        LOGGER.info("originalChromosomes: {}\n", originalChromosomes);
+        LOGGER.info("fingerprint: {}\n", genome.fingerprint);
+
+        return genome;
+    }
+
     @RequestMapping(value = "/sample", method = RequestMethod.GET)
     public GenomeRepr sample(@RequestParam String refGenomeName, @RequestParam String genomeName) {
+        LOGGER.info("sample");
 
         Tree treeFromTask = gibbsSamplerTask.getTree();
         LOGGER.info(String.valueOf(treeFromTask.root.logscore));
@@ -138,6 +164,7 @@ public class ComparerController {
 
     @RequestMapping(value = "/tree", method = RequestMethod.GET)
     public String getTree() {
+        LOGGER.info("get tree");
         Tree treeFromTask = gibbsSamplerTask.getTree();
         return treeFromTask.root.convertToNewick(0);
     }

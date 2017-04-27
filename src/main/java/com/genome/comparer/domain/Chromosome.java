@@ -19,4 +19,12 @@ public class Chromosome {
     public List<Integer> getAdjacencies() {
         return adjacencies;
     }
+
+    @Override
+    public String toString() {
+        return "Chromosome{" +
+            "label='" + label + '\'' +
+            ", adjacencies=" + adjacencies +
+            "}\n";
+    }
 }

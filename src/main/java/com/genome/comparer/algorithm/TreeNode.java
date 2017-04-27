@@ -297,9 +297,6 @@ public class TreeNode {
             if ((name == null) || (name == "")) {
                 name = "vert" + Integer.toString(i);
             }
-            // return "(" + leftChild.convertToNewick() + ":" +
-            // leftChild.edge.length + "," + rightChild.convertToNewick() + ":"
-            // + rightChild.edge.length + ")";
             return "(" + leftChild.convertToNewick(2 * i + 1) + " , "
                 + rightChild.convertToNewick(2 * i + 2) + ")"
                 + name + ":" + ((evolDist == 0.0) ? "1.0" : evolDist);

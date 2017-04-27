@@ -19,6 +19,10 @@ mvn spring-boot:run
 | GET  | /tree   | -    | get the tree of the running algorithm |
 | GET | /genome | refGenomeName, genomeName1, genomeName2    | get 3 genome representation (see data structure bellow) |
 | GET  | /sample   | refGenomeName, genomeName    | get one genome representation |
+### examples:
+- http://localhost:8080/start
+- http://localhost:8080/sample?refGenomeName=hg18&genomeName=rheMac2
+- http://localhost:8080/genome?refGenomeName=canFam&genomeName1=rheMac&genomeName2=bosTau
 
 ## Genome Comparer json data structure
 ```

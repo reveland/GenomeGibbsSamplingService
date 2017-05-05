@@ -1,20 +1,26 @@
 package com.genome.comparer.algorithm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.genome.comparer.domain.Chromosome;
 
 public class Genome {
 
-    private String name;
-    private List<int[]> adjacencies;
+    public String name;
+    public ArrayList<int[]> adjacencies;
     public int[] fingerprint;
     public List<Chromosome> original;
     private boolean circular = false;
 
+    public Genome(String name, List<int[]> adjacencies) {
+        this.name = name;
+        this.adjacencies = new ArrayList<>(adjacencies);
+    }
+
     public Genome(List<int[]> adjacencies, String name) {
         this.name = name;
-        this.adjacencies = adjacencies;
+        this.adjacencies = new ArrayList<>(adjacencies);
     }
 
     public String getName() {
@@ -30,7 +36,7 @@ public class Genome {
     }
 
     public void setAdjacencies(final List<int[]> adjacencies) {
-        this.adjacencies = adjacencies;
+        this.adjacencies = new ArrayList<>(adjacencies);
     }
 
     public boolean isCircular() {
@@ -47,4 +53,5 @@ public class Genome {
             "name='" + name + '\'' +
             "}\n";
     }
+
 }

@@ -4,42 +4,37 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.genome.comparer.io.GenomeReader;
 import com.genome.comparer.utils.FingerprintToGenomeConverter;
 import com.genome.comparer.utils.Utils;
 
 public class Tree {
 
-    public List<Genome> genomes;
     public PooledAdjacencies adjacencies;
     public TreeNode root;
-
-    private final Logger LOGGER = LoggerFactory.getLogger(Tree.class);
-
-    //     private FingerprintToGenomeConverter fingerprintConverter;
+    // not part of the original algorithm
+    public List<Genome> genomes;
 
     public Tree() {
 
     }
 
-    public Tree(List<Genome> inputGenomes) {
+    public Tree(ArrayList<Genome> inputGenomes) {
+        // not part of the original algorithm
         genomes = inputGenomes;
-        PooledAdjacencies pooledAdjacencies = new PooledAdjacencies(genomes);
-        // fingerprintConverter = new FingerprintToGenomeConverter(pooledAdjacencies);
-        List<TreeNode> nodes = new ArrayList<>();
-        for (Genome genome : genomes) {
+
+        PooledAdjacencies pooledAdjacencies = new PooledAdjacencies(inputGenomes);
+        ArrayList<TreeNode> nodes = new ArrayList<TreeNode>();
+        for (Genome genome : inputGenomes) {
             TreeNode current = new TreeNode();
             current.owner = this;
             current.fingerprint = pooledAdjacencies.fingerprint(genome);
-            current.name = genome.getName();
+            current.name = genome.name;
             nodes.add(current);
         }
         while (nodes.size() > 1) {
-            // find the closest nodes
-            int min = pooledAdjacencies.getAdjacencies().size();
+            //find the closest nodes
+            int min = pooledAdjacencies.adjacencies.size();
             int a = 0;
             int b = 1;
             for (int i = 0; i < nodes.size(); i++) {
@@ -57,7 +52,7 @@ public class Tree {
                     }
                 }
             }
-            // merge these two nodes
+            //merge these two nodes
             TreeNode x = nodes.get(a);
             TreeNode y = nodes.get(b);
             nodes.remove(b);
@@ -92,7 +87,7 @@ public class Tree {
      */
     public void fitch() {
         root.fitchUp();
-        //        System.out.println("Fitch checkscore: " + root.fitchcheckscore);
+        // System.out.println("Fitch checkscore: " + root.fitchcheckscore);
         root.fitchDown();
     }
 
@@ -101,21 +96,28 @@ public class Tree {
     }
 
     public void gibbsSampling() {
-        int x = Utils.random.nextInt(adjacencies.getAdjacencies().size());
+        int x = Utils.random.nextInt(adjacencies.adjacencies.size());
         root.calculateSankoff(x);
-
-        //        LOGGER.debug("\nnumber of optimal labelling: {}\nindividual scores: {}",
-        //            ((root.sankoffscore[0] <= root.sankoffscore[1]
-        //                ? root.sankoffsum[0] : 0)
-        //                + (root.sankoffscore[1] <= root.sankoffscore[0]
-        //                ? root.sankoffsum[1] : 0)),
-        //            root.sankoffsum[0] + ", " + root.sankoffsum[1]);
-
+        // System.out.println("numer of optimal labelling: " +
+        //     ((root.sankoffscore[0] <= root.sankoffscore[1] ? root.sankoffsum[0] : 0) +
+        //         (root.sankoffscore[1] <= root.sankoffscore[0] ? root.sankoffsum[1] : 0)) + ", individual scores: " +
+        //     root.sankoffsum[0] + ", " + root.sankoffsum[1]);
         root.sankoffmark[0] = root.sankoffscore[0] <= root.sankoffscore[1];
         root.sankoffmark[1] = root.sankoffscore[1] <= root.sankoffscore[0];
         root.select(x);
     }
 
+    /**
+     * for debugging reasons only
+     * @param args
+     * @throws IOException
+     */
+    public static void main(String[] args) throws IOException {
+        Tree tree = new Tree(GenomeReader.read("./data/HMMRDCOC_100_300.perm"));
+        System.out.println(tree.root.name);
+    }
+
+    // not part of the original algorithm
     /**
      * Replaces the root of the tree to a position where the means of the branch
      * lengths on either side of the root are equal. Recursive.
@@ -216,7 +218,6 @@ public class Tree {
                 root = newRoot;
                 useMidPointRoot();
             }
-
         } else {
             System.err.println("ERROR: root has no children ! " + "leftChild:" + root.hasLeftChild() + "  rightChild:"
                 + root.hasRightChild());
@@ -224,19 +225,9 @@ public class Tree {
         }
     }
 
+    // not part of the original algorithm
     public List<Genome> getGenomes(FingerprintToGenomeConverter fingerprintConverter) {
         List<Genome> allGenomes = new ArrayList<>(genomes);
         return root.getGenome(allGenomes, fingerprintConverter);
-    }
-
-    /**
-     * for debugging reasons only
-     *
-     * @param args
-     * @throws IOException
-     */
-    public static void main(String[] args) throws IOException {
-        Tree tree = new Tree(GenomeReader.read("./data/HMMRDCOC_100_300.perm"));
-        System.out.println(" treeRootName: " + tree.root.name);
     }
 }

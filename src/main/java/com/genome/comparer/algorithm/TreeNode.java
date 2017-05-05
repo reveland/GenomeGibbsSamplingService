@@ -1,29 +1,26 @@
 package com.genome.comparer.algorithm;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.genome.comparer.utils.FingerprintToGenomeConverter;
 import com.genome.comparer.utils.Utils;
 
 public class TreeNode {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(TreeNode.class);
+    // not part of the original algorithm
+    public double evolDist; // distance from its parent
+    // not part of the original algorithm
+    private double avgLenToLeaves = -1;
+    // not part of the original algorithm
+    private int numOfLeaves = -1;
 
     public TreeNode parent;
-    /**
-     * Evolutionary distance from its parent node. Read from the Newick file of
-     * the guide tree or computed (with NJ/UPGMA)
-     */
-    public double evolDist; // distance from its parent
-
     public TreeNode leftChild;
     public TreeNode rightChild;
     public Tree owner;
     public int[] fingerprint;
-    private int[] fitchauxiliary;
+    public int[] fitchauxiliary;
 
     public int[] sankoffscore;
     public int[] sankoffsum;
@@ -34,10 +31,6 @@ public class TreeNode {
     int fitchcheckscore;
 
     public double logscore;
-    /** Mean distance of its leaves from this node */
-    private double avgLenToLeaves = -1;
-    /** Number of leaves under this node */
-    private int numOfLeaves = -1;
 
     public TreeNode() {
         sankoffscore = new int[2];
@@ -82,24 +75,24 @@ public class TreeNode {
             fitchauxiliary = new int[leftChild.fitchauxiliary.length];
             fingerprint = new int[fitchauxiliary.length];
             /*
-             * 0 1 2 0 0 2 0 1 2 1 1 2 0 1 2
-			 *
-			 * fitch algorihm
-			 *
+             *      0  1  2
+			 *   0  0  2  0
+			 *   1  2  1  1
+			 *   2  0  1  2
+			 * 
 			 */
             for (int i = 0; i < fitchauxiliary.length; i++) {
-                if ((leftChild.fitchauxiliary[i] == 2 && rightChild.fitchauxiliary[i] == 2)
-                    || (leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 1)
-                    || (leftChild.fitchauxiliary[i] == 1 && rightChild.fitchauxiliary[i] == 0)) {
+                if ((leftChild.fitchauxiliary[i] == 2 && rightChild.fitchauxiliary[i] == 2) ||
+                    (leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 1) ||
+                    (leftChild.fitchauxiliary[i] == 1 && rightChild.fitchauxiliary[i] == 0)) {
                     fitchauxiliary[i] = 2;
-                    if ((leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 1)
-                        || (leftChild.fitchauxiliary[i] == 1
-                        && rightChild.fitchauxiliary[i] == 0)) {
+                    if ((leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 1) ||
+                        (leftChild.fitchauxiliary[i] == 1 && rightChild.fitchauxiliary[i] == 0)) {
                         fitchcheckscore++;
                     }
-                } else if ((leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 0)
-                    || (leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 2)
-                    || (leftChild.fitchauxiliary[i] == 2 && rightChild.fitchauxiliary[i] == 0)) {
+                } else if ((leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 0) ||
+                    (leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 2) ||
+                    (leftChild.fitchauxiliary[i] == 2 && rightChild.fitchauxiliary[i] == 0)) {
                     fitchauxiliary[i] = 0;
                 } else {
                     fitchauxiliary[i] = 1;
@@ -157,56 +150,43 @@ public class TreeNode {
     }
 
     public void calculateSankoff(int x) {
-        //        LOGGER.info("in calcul: {}", this.name);
-        //        LOGGER.info("in calcul: left child is {}", leftChild);
         if (leftChild != null) {
             leftChild.calculateSankoff(x);
             rightChild.calculateSankoff(x);
-            sankoffscore[0] = Math.min(leftChild.sankoffscore[0], leftChild.sankoffscore[1] + 1)
-                + Math.min(rightChild.sankoffscore[0], rightChild.sankoffscore[1] + 1);
-            sankoffscore[1] = Math.min(leftChild.sankoffscore[0] + 1, leftChild.sankoffscore[1])
-                + Math.min(rightChild.sankoffscore[0] + 1, rightChild.sankoffscore[1]);
+            sankoffscore[0] = Math.min(leftChild.sankoffscore[0], leftChild.sankoffscore[1] + 1) +
+                Math.min(rightChild.sankoffscore[0], rightChild.sankoffscore[1] + 1);
+            sankoffscore[1] = Math.min(leftChild.sankoffscore[0] + 1, leftChild.sankoffscore[1]) +
+                Math.min(rightChild.sankoffscore[0] + 1, rightChild.sankoffscore[1]);
             int sum = 0;
-            sum += (leftChild.sankoffscore[0] <= leftChild.sankoffscore[1] + 1
-                ? leftChild.sankoffsum[0] : 0);
-            sum += (leftChild.sankoffscore[0] >= leftChild.sankoffscore[1] + 1
-                ? leftChild.sankoffsum[1] : 0);
+            sum += (leftChild.sankoffscore[0] <= leftChild.sankoffscore[1] + 1 ? leftChild.sankoffsum[0] : 0);
+            sum += (leftChild.sankoffscore[0] >= leftChild.sankoffscore[1] + 1 ? leftChild.sankoffsum[1] : 0);
 
             int sum1 = 0;
-            sum1 += (rightChild.sankoffscore[0] <= rightChild.sankoffscore[1] + 1
-                ? rightChild.sankoffsum[0] : 0);
-            sum1 += (rightChild.sankoffscore[0] >= rightChild.sankoffscore[1] + 1
-                ? rightChild.sankoffsum[1] : 0);
+            sum1 += (rightChild.sankoffscore[0] <= rightChild.sankoffscore[1] + 1 ? rightChild.sankoffsum[0] : 0);
+            sum1 += (rightChild.sankoffscore[0] >= rightChild.sankoffscore[1] + 1 ? rightChild.sankoffsum[1] : 0);
 
             sankoffsum[0] = sum * sum1;
+
             boolean is1inConflict = false;
-            List<Adjacency> conflicts = owner.adjacencies.getAdjacencies()
-                .get(x).inConflictWith;
+            ArrayList<Adjacency> conflicts = owner.adjacencies.adjacencies.get(x).inconflict;
             for (int i = 0; !is1inConflict && i < conflicts.size(); i++) {
-                int y = owner.adjacencies.getAdjacencies().indexOf(conflicts.get(i));
+                int y = owner.adjacencies.adjacencies.indexOf(conflicts.get(i));
                 is1inConflict = (fingerprint[y] == 1);
             }
             if (is1inConflict) {
                 sankoffsum[1] = 0;
             } else {
                 sum = 0;
-                sum += (leftChild.sankoffscore[0] + 1 <= leftChild.sankoffscore[1] ?
-                    leftChild.sankoffsum[0] :
-                    0);
-                sum += (leftChild.sankoffscore[0] + 1 >= leftChild.sankoffscore[1] ?
-                    leftChild.sankoffsum[1] :
-                    0);
+                sum += (leftChild.sankoffscore[0] + 1 <= leftChild.sankoffscore[1] ? leftChild.sankoffsum[0] : 0);
+                sum += (leftChild.sankoffscore[0] + 1 >= leftChild.sankoffscore[1] ? leftChild.sankoffsum[1] : 0);
 
                 sum1 = 0;
-                sum1 += (rightChild.sankoffscore[0] + 1 <= rightChild.sankoffscore[1] ?
-                    rightChild.sankoffsum[0] :
-                    0);
-                sum1 += (rightChild.sankoffscore[0] + 1 >= rightChild.sankoffscore[1] ?
-                    rightChild.sankoffsum[1] :
-                    0);
+                sum1 += (rightChild.sankoffscore[0] + 1 <= rightChild.sankoffscore[1] ? rightChild.sankoffsum[0] : 0);
+                sum1 += (rightChild.sankoffscore[0] + 1 >= rightChild.sankoffscore[1] ? rightChild.sankoffsum[1] : 0);
 
                 sankoffsum[1] = sum * sum1;
             }
+
         } else {
             if (fingerprint[x] == 0) {
                 sankoffscore[0] = 0;
@@ -220,47 +200,34 @@ public class TreeNode {
                 sankoffsum[1] = 1;
             }
         }
-        //        LOGGER.info("in calcul: sos1: {}, sos2: {}", sankoffsum[0], sankoffsum[1]);
     }
 
     public void select(int x) {
         if (leftChild != null) {
-            //            LOGGER.info("in select: {}", this.name);
-            //            LOGGER.info("in select: oos1: {}, oos2: {}", sankoffsum[0], sankoffsum[1]);
             sankoffsum[0] *= (sankoffmark[0] ? 1 : 0);
             sankoffsum[1] *= (sankoffmark[1] ? 1 : 0);
-            //            LOGGER.info("in select: som1: {}, som2: {}", sankoffmark[0], sankoffmark[1]);
-            //            LOGGER.info("in select: sos1: {}, sos2: {}", sankoffsum[0], sankoffsum[1]);
             int p = Utils.random.nextInt(sankoffsum[0] + sankoffsum[1]);
 
             if (p < sankoffsum[0]) {
                 fingerprint[x] = 0;
                 leftChild.sankoffmark[0] =
-                    (leftChild.sankoffscore[0] <= leftChild.sankoffscore[1] + 1)
-                        && (leftChild.sankoffsum[0] != 0);
+                    (leftChild.sankoffscore[0] <= leftChild.sankoffscore[1] + 1) && (leftChild.sankoffsum[0] != 0);
                 leftChild.sankoffmark[1] =
-                    (leftChild.sankoffscore[0] >= leftChild.sankoffscore[1] + 1)
-                        && (leftChild.sankoffsum[1] != 0);
+                    (leftChild.sankoffscore[0] >= leftChild.sankoffscore[1] + 1) && (leftChild.sankoffsum[1] != 0);
                 rightChild.sankoffmark[0] =
-                    (rightChild.sankoffscore[0] <= rightChild.sankoffscore[1] + 1)
-                        && (rightChild.sankoffsum[0] != 0);
+                    (rightChild.sankoffscore[0] <= rightChild.sankoffscore[1] + 1) && (rightChild.sankoffsum[0] != 0);
                 rightChild.sankoffmark[1] =
-                    (rightChild.sankoffscore[0] >= rightChild.sankoffscore[1] + 1)
-                        && (rightChild.sankoffsum[0] != 0);
+                    (rightChild.sankoffscore[0] >= rightChild.sankoffscore[1] + 1) && (rightChild.sankoffsum[0] != 0);
             } else {
                 fingerprint[x] = 1;
                 leftChild.sankoffmark[0] =
-                    (leftChild.sankoffscore[0] + 1 <= leftChild.sankoffscore[1])
-                        && (leftChild.sankoffsum[0] != 0);
+                    (leftChild.sankoffscore[0] + 1 <= leftChild.sankoffscore[1]) && (leftChild.sankoffsum[0] != 0);
                 leftChild.sankoffmark[1] =
-                    (leftChild.sankoffscore[0] + 1 >= leftChild.sankoffscore[1])
-                        && (leftChild.sankoffsum[1] != 0);
+                    (leftChild.sankoffscore[0] + 1 >= leftChild.sankoffscore[1]) && (leftChild.sankoffsum[1] != 0);
                 rightChild.sankoffmark[0] =
-                    (rightChild.sankoffscore[0] + 1 <= rightChild.sankoffscore[1])
-                        && (rightChild.sankoffsum[0] != 0);
+                    (rightChild.sankoffscore[0] + 1 <= rightChild.sankoffscore[1]) && (rightChild.sankoffsum[0] != 0);
                 rightChild.sankoffmark[1] =
-                    (rightChild.sankoffscore[0] + 1 >= rightChild.sankoffscore[1])
-                        && (rightChild.sankoffsum[0] != 0);
+                    (rightChild.sankoffscore[0] + 1 >= rightChild.sankoffscore[1]) && (rightChild.sankoffsum[0] != 0);
             }
 
             leftChild.select(x);
@@ -280,12 +247,14 @@ public class TreeNode {
             for (int i = 0; i < fingerprint.length; i++) {
                 sum += (fingerprint[i] == parent.fingerprint[i] ? 0 : 1);
             }
+            // System.out.print(sum + " ");
             for (int i = 2; i <= sum; i++) {
                 logscore += Math.log(i);
             }
         }
     }
 
+    // not part of the original algorithm
     public String convertToNewick(int i) {
         if (leftChild == null) {
             double length = 1.0;
@@ -381,3 +350,4 @@ public class TreeNode {
         }
     }
 }
+

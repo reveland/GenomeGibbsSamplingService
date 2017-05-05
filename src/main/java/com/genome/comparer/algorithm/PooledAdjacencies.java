@@ -3,76 +3,65 @@ package com.genome.comparer.algorithm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class PooledAdjacencies {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(PooledAdjacencies.class);
-
-    private List<Adjacency> adjacencies;
+    public ArrayList<Adjacency> adjacencies;
 
     public PooledAdjacencies(List<Genome> genomes) {
-        adjacencies = new ArrayList<>();
+        adjacencies = new ArrayList<Adjacency>();
         for (Genome genome : genomes) {
-            for (int[] currentAdjacency : genome.getAdjacencies()) {
-                if (!adjacencies.contains(new Adjacency(currentAdjacency))) {
-                    addNewAdjacency(currentAdjacency);
+            for (int[] index : genome.adjacencies) {
+                boolean found = false;
+                for (int i = 0; !found && i < adjacencies.size(); i++) {
+                    int[] otherindex = adjacencies.get(i).index;
+                    found = (index[0] == otherindex[0] && index[1] == otherindex[1]) ||
+                        (index[0] == otherindex[1] && index[1] == otherindex[0]);
+                }
+                if (!found) {
+                    //new adjacency, construct, and find the conflicts
+                    int[] newindex = new int[]{index[0], index[1]};
+                    Adjacency newadjacency = new Adjacency(newindex);
+                    //System.out.println("New adjacency: ("+newadjacency.index[0]+","+newadjacency.index[1]+")");
+                    for (Adjacency adjacency : adjacencies) {
+                        if (adjacency.index[0] == newadjacency.index[0] ||
+                            adjacency.index[0] == newadjacency.index[1] ||
+                            adjacency.index[1] == newadjacency.index[0] ||
+                            adjacency.index[1] == newadjacency.index[1]) {
+                            adjacency.inconflict.add(newadjacency);
+                            newadjacency.inconflict.add(adjacency);
+                            // System.out.println("New conflict: (" + adjacency.index[0] + "," + adjacency.index[1]
+                            //     + ") and (" + newadjacency.index[0] + "," + newadjacency.index[1] + ")");
+                        }
+                    }
+                    adjacencies.add(newadjacency);
                 }
             }
         }
     }
 
     public int[] fingerprint(Genome genome) {
-        logAdjacenciesInfo(genome);
-
-        List<int[]> genomeAdjacencies = genome.getAdjacencies();
-        //                List<Integer> fingerprint = adjacencies.stream()
-        //                    .map(adjacency -> genomeAdjacencies.contains(adjacency) ? 1 : 0)
-        //                    .collect(Collectors.toList());
-        List<Integer> fingerprint = new ArrayList<>();
-        for (Adjacency adjacency : adjacencies) {
-            if (genomeAdjacencies.contains(adjacency.getAdjacency())) {
-                fingerprint.add(1);
+        int[] list = new int[adjacencies.size()];
+        // int counter = 0;
+        for (int i = 0; i < list.length; i++) {
+            int[] currentindex = adjacencies.get(i).index;
+            boolean found = false;
+            for (int j = 0; !found && j < genome.adjacencies.size(); j++) {
+                int[] currentgenomeindex = genome.adjacencies.get(j);
+                found = ((currentgenomeindex[0] == currentindex[0] &&
+                    currentgenomeindex[1] == currentindex[1]) ||
+                    (currentgenomeindex[0] == currentindex[1] &&
+                        currentgenomeindex[1] == currentindex[0]));
+            }
+            if (found) {
+                list[i] = 1;
+                // counter++;
             } else {
-                fingerprint.add(0);
+                list[i] = 0;
             }
         }
-        return fingerprint.stream().mapToInt(Integer::byteValue).toArray();
-    }
-
-    private void logAdjacenciesInfo(final Genome genome) {
-        //        LOGGER.info("adjacencies in the pool: {}", adjacencies.stream()
-        //            .map(conflictedAdjacency -> "(" + conflictedAdjacency.getExtremityA() + " " + conflictedAdjacency.getExtremityB() + ")")
-        //            .reduce(String::concat).orElse(""));
-        //        LOGGER.info("adjacencies in the genome: {}", genome.getAdjacencies().stream()
-        //            .map(conflictedAdjacency -> "(" + conflictedAdjacency.getExtremityA() + " " + conflictedAdjacency.getExtremityB() + ")")
-        //            .reduce(String::concat).orElse(""));
-    }
-
-    private void addNewAdjacency(final int[] currentAdjacency) {
-        Adjacency newAdjacency = new Adjacency(currentAdjacency);
-        setConflicts(newAdjacency);
-        adjacencies.add(newAdjacency);
-
-        //        LOGGER.info("New adjacency: ({}, {})", currentAdjacency.getExtremityA(), currentAdjacency.getExtremityB());
-    }
-
-    private void setConflicts(final Adjacency newAdjacency) {
-        for (Adjacency adjacency : adjacencies) {
-            if (adjacency.isConflictedWith(newAdjacency)) {
-                setConflict(newAdjacency, adjacency);
-            }
-        }
-    }
-
-    private void setConflict(final Adjacency newAdjacency,
-        final Adjacency adjacency) {
-        adjacency.addConflict(newAdjacency);
-        newAdjacency.addConflict(adjacency);
-
-        //        LOGGER.info("New conflict: ({}, {}) <-> ({}, {})", adjacency.getExtremityA(), adjacency.getExtremityB(),
-        //            newAdjacency.getExtremityA(), newAdjacency.getExtremityB());
+        // System.out.println(
+        //     "found adjacencies: " + counter + " number of adjacencies in genome: " + genome.adjacencies.size());
+        return list;
     }
 
     public List<Adjacency> getAdjacencies() {

@@ -1,4 +1,4 @@
-package com.genome.comparer.datastructures;
+package com.genome.comparer.tree;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.genome.comparer.algorithm.Genome;
-import com.genome.comparer.algorithm.PooledAdjacencies;
-import com.genome.comparer.algorithm.Tree;
-import com.genome.comparer.algorithm.TreeNode;
+import com.genome.comparer.core.Genome;
+import com.genome.comparer.core.PooledAdjacencies;
+import com.genome.comparer.core.Tree;
+import com.genome.comparer.core.TreeNode;
 
 /**
  * Neighbor joining Tree Maker

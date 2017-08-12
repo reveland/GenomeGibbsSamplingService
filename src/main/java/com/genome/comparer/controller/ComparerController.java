@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.genome.comparer.datastructures.TreeMaker;
+import com.genome.comparer.tree.TreeMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.genome.comparer.algorithm.Genome;
-import com.genome.comparer.algorithm.PooledAdjacencies;
-import com.genome.comparer.algorithm.Tree;
-import com.genome.comparer.datastructures.UPGMATreeMaker;
+import com.genome.comparer.core.Genome;
+import com.genome.comparer.core.PooledAdjacencies;
+import com.genome.comparer.core.Tree;
+import com.genome.comparer.tree.UPGMATreeMaker;
 import com.genome.comparer.domain.Chromosome;
 import com.genome.comparer.domain.RefSquare;
 import com.genome.comparer.domain.SquareList;

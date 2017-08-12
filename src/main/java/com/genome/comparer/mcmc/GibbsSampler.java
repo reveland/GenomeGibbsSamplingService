@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.genome.comparer.algorithm.Tree;
+import com.genome.comparer.core.Tree;
 import com.genome.comparer.io.VertebrateTreeConstructor;
 
 public class GibbsSampler implements Runnable {

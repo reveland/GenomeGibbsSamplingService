@@ -1,4 +1,4 @@
-package com.genome.comparer.algorithm;
+package com.genome.comparer.core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +8,11 @@ import com.genome.comparer.utils.Utils;
 
 public class TreeNode {
 
-    // not part of the original algorithm
+    // not part of the original core
     public double evolDist; // distance from its parent
-    // not part of the original algorithm
+    // not part of the original core
     private double avgLenToLeaves = -1;
-    // not part of the original algorithm
+    // not part of the original core
     private int numOfLeaves = -1;
 
     public TreeNode parent;
@@ -254,7 +254,7 @@ public class TreeNode {
         }
     }
 
-    // not part of the original algorithm
+    // not part of the original core
     public String convertToNewick(int i) {
         if (leftChild == null) {
             double length = 1.0;

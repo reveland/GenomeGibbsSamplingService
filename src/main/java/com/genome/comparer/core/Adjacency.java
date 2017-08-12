@@ -1,4 +1,4 @@
-package com.genome.comparer.algorithm;
+package com.genome.comparer.core;
 
 import java.util.ArrayList;
 

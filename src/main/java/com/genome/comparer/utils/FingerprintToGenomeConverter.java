@@ -5,8 +5,8 @@ import static com.genome.comparer.service.SyntenyReCounter.makeChains;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.genome.comparer.algorithm.Genome;
-import com.genome.comparer.algorithm.PooledAdjacencies;
+import com.genome.comparer.core.Genome;
+import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.domain.Chromosome;
 
 public class FingerprintToGenomeConverter {

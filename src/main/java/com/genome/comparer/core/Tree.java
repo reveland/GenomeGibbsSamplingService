@@ -1,4 +1,4 @@
-package com.genome.comparer.algorithm;
+package com.genome.comparer.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class Tree {
 
     public PooledAdjacencies adjacencies;
     public TreeNode root;
-    // not part of the original algorithm
+    // not part of the original core
     public List<Genome> genomes;
 
     public Tree() {
@@ -20,7 +20,7 @@ public class Tree {
     }
 
     public Tree(ArrayList<Genome> inputGenomes) {
-        // not part of the original algorithm
+        // not part of the original core
         genomes = inputGenomes;
 
         PooledAdjacencies pooledAdjacencies = new PooledAdjacencies(inputGenomes);
@@ -83,7 +83,7 @@ public class Tree {
     }
 
     /**
-     * This method does the Fitch algorithm on the tree
+     * This method does the Fitch core on the tree
      */
     public void fitch() {
         root.fitchUp();
@@ -117,7 +117,7 @@ public class Tree {
         System.out.println(tree.root.name);
     }
 
-    // not part of the original algorithm
+    // not part of the original core
     /**
      * Replaces the root of the tree to a position where the means of the branch
      * lengths on either side of the root are equal. Recursive.
@@ -225,7 +225,7 @@ public class Tree {
         }
     }
 
-    // not part of the original algorithm
+    // not part of the original core
     public List<Genome> getGenomes(FingerprintToGenomeConverter fingerprintConverter) {
         List<Genome> allGenomes = new ArrayList<>(genomes);
         return root.getGenome(allGenomes, fingerprintConverter);

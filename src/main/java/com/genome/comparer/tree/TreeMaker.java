@@ -1,8 +1,8 @@
-package com.genome.comparer.datastructures;
+package com.genome.comparer.tree;
 
-import com.genome.comparer.algorithm.Genome;
-import com.genome.comparer.algorithm.PooledAdjacencies;
-import com.genome.comparer.algorithm.Tree;
+import com.genome.comparer.core.Genome;
+import com.genome.comparer.core.PooledAdjacencies;
+import com.genome.comparer.core.Tree;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.genome.comparer.algorithm.Genome;
+import com.genome.comparer.core.Genome;
 import com.genome.comparer.domain.Chromosome;
 import com.genome.comparer.domain.RefSquare;
 

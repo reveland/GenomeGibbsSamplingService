@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.genome.comparer.algorithm.Genome;
+import com.genome.comparer.core.Genome;
 import com.genome.comparer.domain.Chromosome;
 import com.genome.comparer.domain.RefSquare;
 

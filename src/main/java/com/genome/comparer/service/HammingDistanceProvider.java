@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.genome.comparer.algorithm.Genome;
+import com.genome.comparer.core.Genome;
 
 @Service
 public class HammingDistanceProvider {

@@ -6,16 +6,21 @@ import java.util.List;
 import com.genome.comparer.algorithm.Tree;
 import com.genome.comparer.algorithm.TreeNode;
 
+/**
+ * I think this class purpose to:
+ *
+ * Make a Tree object from Newick string
+ */
 public class Newick {
 
     Tree tree_;
 
-    private Tree build(String newickStr) {
+    public Tree build(String newickStr) {
         tree_ = new Tree();
         if ((newickStr.charAt(0) != '(') || !(newickStr.contains(")"))) {
             throw new RuntimeException("newickStr: " + newickStr + " does not contain ( or )");
         } else {
-            String[] split = processExtParenthes(newickStr);
+            String[] split = processExtParenthesis(newickStr);
             String info = split[1];
             String childrenStr = split[0];
             TreeNode root = new TreeNode();
@@ -53,7 +58,7 @@ public class Newick {
         }
 
         if (childStr.contains("(") && childStr.contains(")")) {
-            String[] split = processExtParenthes(childStr);
+            String[] split = processExtParenthesis(childStr);
             String info = split[1];
             String newChildrenStr = split[0];
 
@@ -72,7 +77,7 @@ public class Newick {
         }
     }
 
-    private String[] processExtParenthes(String str) {
+    private String[] processExtParenthesis(String str) {
         String[] result = new String[2];
 
         int firstOpenParIndex = str.indexOf("(");

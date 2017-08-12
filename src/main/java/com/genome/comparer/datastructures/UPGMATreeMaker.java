@@ -7,10 +7,15 @@ import com.genome.comparer.algorithm.PooledAdjacencies;
 import com.genome.comparer.algorithm.Tree;
 import com.genome.comparer.algorithm.TreeNode;
 
-public class UPGMATreeMaker {
+/**
+ * Unweighted Pair Group Method with Arithmetic Mean Tree
+ */
+public class UPGMATreeMaker implements TreeMaker  {
+
     private PooledAdjacencies adjacencies;
     private List<Genome> genomes;
 
+    @Override
     public Tree makeTree(double[][] m, String[] names) {
         Tree gt = new Tree();
 
@@ -71,6 +76,7 @@ public class UPGMATreeMaker {
         return gt;
     }
 
+    @Override
     public Tree makeTree(double[][] m, List<Genome> inputGenomes, PooledAdjacencies inputAdjacencies) {
 
         adjacencies = inputAdjacencies;
@@ -146,20 +152,22 @@ public class UPGMATreeMaker {
         return gt;
     }
 
-    // public static void main(String[] args) {
-    // double m[][] =
-    // {{0,2,4,6,6,8},
-    // {2,0,4,6,6,8},
-    // {4,4,0,6,6,8},
-    // {6,6,6,0,4,8},
-    // {6,6,6,4,0,8},
-    // {8,8,8,8,8,0}};
-    // String[] names = {"A","B","C","D","E","F"};
-    // UPGMATreeMaker ut = new UPGMATreeMaker();
-    // GuideTree gt = ut.makeTree(m, names);
-    // gt.printTree();
-    // System.out.println();
-    // System.out.println(gt.newickString());
-    // }
+//    public static void main(String[] args) {
+//        double m[][] =
+//                {
+//                        {0, 2, 4, 6, 6, 8},
+//                        {2, 0, 4, 6, 6, 8},
+//                        {4, 4, 0, 6, 6, 8},
+//                        {6, 6, 6, 0, 4, 8},
+//                        {6, 6, 6, 4, 0, 8},
+//                        {8, 8, 8, 8, 8, 0}
+//                };
+//        String[] names = {"A", "B", "C", "D", "E", "F"};
+//        UPGMATreeMaker ut = new UPGMATreeMaker();
+//        GuideTree gt = ut.makeTree(m, names);
+//        gt.printTree();
+//        System.out.println();
+//        System.out.println(gt.newickString());
+//    }
 
 }

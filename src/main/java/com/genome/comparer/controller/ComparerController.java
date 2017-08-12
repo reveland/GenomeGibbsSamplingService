@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.genome.comparer.datastructures.TreeMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +62,8 @@ public class ComparerController {
 
         double[][] matrix = createDistanceMatrix(genomes);
 
-        UPGMATreeMaker upgma = new UPGMATreeMaker();
-        Tree tree = upgma.makeTree(matrix, genomes, pooledAdjacencies);
+        TreeMaker treeMaker = new UPGMATreeMaker();
+        Tree tree = treeMaker.makeTree(matrix, genomes, pooledAdjacencies);
 
         tree.genomes = genomes;
         tree.adjacencies = pooledAdjacencies;

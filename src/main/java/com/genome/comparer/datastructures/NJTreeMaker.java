@@ -11,13 +11,17 @@ import com.genome.comparer.algorithm.PooledAdjacencies;
 import com.genome.comparer.algorithm.Tree;
 import com.genome.comparer.algorithm.TreeNode;
 
-public class NJTreeMaker {
+/**
+ * Neighbor joining Tree Maker
+ */
+public class NJTreeMaker implements TreeMaker {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(NJTreeMaker.class);
 
     private PooledAdjacencies adjacencies;
     private List<Genome> genomes;
 
+    @Override
     public Tree makeTree(double[][] m, String[] names) {
         Tree gt = new Tree();
 
@@ -89,6 +93,7 @@ public class NJTreeMaker {
         return gt;
     }
 
+    @Override
     public Tree makeTree(double[][] m, List<Genome> inputGenomes, PooledAdjacencies inputAdjacencies) {
         genomes = inputGenomes;
         adjacencies = inputAdjacencies;

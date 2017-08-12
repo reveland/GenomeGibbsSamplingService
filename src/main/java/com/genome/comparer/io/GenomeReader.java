@@ -1,36 +1,45 @@
 package com.genome.comparer.io;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.genome.comparer.core.Genome;
 import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.domain.Chromosome;
+import com.genome.comparer.mcmc.GibbsSampler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GenomeReader {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenomeReader.class);
+
     public static ArrayList<Genome> read(String filename) throws IOException {
-        BufferedReader bf = new BufferedReader(new FileReader(new File(filename)));
+        BufferedReader reader = getBufferedReader(filename);
         ArrayList<Genome> genomes = new ArrayList<>();
-        String s;
-        s = bf.readLine();
-        String[] temp = s.split("\t");
-        String currentName = temp[0].substring(1, temp[0].length() - 1);
         ArrayList<int[]> adjacencies = new ArrayList<>();
         List<Chromosome> original = new ArrayList<>();
+        String line = reader.readLine();
+        String genomeName = getGenomeName(line);
         String chromosomeName = "";
-        while ((s = bf.readLine()) != null) {
-            if (s.length() != 0 && s.charAt(0) != '>') {
+        while ((line = reader.readLine()) != null) {
+            if (isGenomeNameLine(line)) {
+                Genome currentGenome = new Genome(adjacencies, genomeName);
+                currentGenome.original = original;
+                currentGenome.setCircular(false);
+                LOGGER.debug(String.valueOf(currentGenome));
+                genomes.add(currentGenome);
+                // preparing for read the new genome data
+                genomeName = getGenomeName(line);
+                adjacencies = new ArrayList<>();
+                original = new ArrayList<>();
+            } else if(notBlankLine(line)) {
                 List<Integer> chromosomeAdj = new ArrayList<>();
-                Chromosome chromosome;
-                if (s.length() != 0 && s.charAt(0) == '#') {
-                    chromosomeName = s.substring(5, s.length());
-                } else if (s.length() != 0 && s.charAt(0) != '#') {
-                    String[] syntenys = s.split(" ");
+                if (isChromosomeNameLine(line)) {
+                    chromosomeName = getChromosomeName(line);
+                } else {
+                    String[] syntenys = line.split(" ");
                     int orig = Integer.parseInt(syntenys[0]);
                     chromosomeAdj.add(orig);
                     for (int i = 0; i < syntenys.length - 2; i++) {
@@ -50,35 +59,51 @@ public class GenomeReader {
                         }
                         adjacencies.add(adjacency);
                     }
-                    chromosome = new Chromosome(chromosomeName, chromosomeAdj);
-                    original.add(chromosome);
+                    original.add(new Chromosome(chromosomeName, chromosomeAdj));
                 }
-            } else if (s.length() != 0 && s.charAt(0) == '>') {
-
-                Genome currentGenome = new Genome(adjacencies, currentName);
-                currentGenome.original = original;
-                currentGenome.setCircular(false);
-                genomes.add(currentGenome);
-                temp = s.split("\t");
-                currentName = temp[0].substring(1, temp[0].length() - 1);
-                adjacencies = new ArrayList<>();
-                original = new ArrayList<>();
             }
         }
 
-        Genome currentGenome = new Genome(adjacencies, currentName);
+        Genome currentGenome = new Genome(adjacencies, genomeName);
         currentGenome.original = original;
+        currentGenome.setCircular(false);
+        LOGGER.debug(String.valueOf(currentGenome));
         genomes.add(currentGenome);
-        bf.close();
+        reader.close();
         return genomes;
     }
 
+    private static boolean notBlankLine(String line) {
+        return line.length() != 0;
+    }
+
+    private static String getChromosomeName(String line) {
+        return line.substring(5, line.length());
+    }
+
+    private static boolean isGenomeNameLine(String line) {
+        return notBlankLine(line) && line.charAt(0) == '>';
+    }
+
+    private static boolean isChromosomeNameLine(String line) {
+        return notBlankLine(line) && line.charAt(0) == '#';
+    }
+
+    private static String getGenomeName(String line) {
+        String[] temp = line.split("\t");
+        return temp[0].substring(1, temp[0].length() - 1);
+    }
+
+    private static BufferedReader getBufferedReader(String filename) throws FileNotFoundException {
+        return new BufferedReader(new FileReader(new File(filename)));
+    }
+
     public static void main(String[] args) throws IOException {
-        ArrayList<Genome> genomes = read("./data/HMMRDCOC_100_300.perm");
+        ArrayList<Genome> genomes = read("./data/test_genome_data.perm");
         System.out.println("ready");
         PooledAdjacencies pooledAdjacencies = new PooledAdjacencies(genomes);
         System.out.println(
-            "number of pooled deprecatedAdjacencies: " + pooledAdjacencies.getAdjacencies().size());
+                "number of pooled deprecatedAdjacencies: " + pooledAdjacencies.getAdjacencies().size());
         for (Genome genome : genomes) {
             genome.fingerprint = pooledAdjacencies.fingerprint(genome);
         }

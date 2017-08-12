@@ -1,7 +1,9 @@
 package com.genome.comparer.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.genome.comparer.domain.Chromosome;
 
@@ -50,8 +52,12 @@ public class Genome {
     @Override
     public String toString() {
         return "Genome{" +
-            "name='" + name + '\'' +
-            "}\n";
+                "name='" + name + '\'' +
+                ",\n adjacencies=" + adjacencies.stream().map(ints ->
+                "(" + ints[0] + "," + ints[1] + ")").collect(Collectors.toList()) +
+                ",\n fingerprint=" + Arrays.toString(fingerprint) +
+                ",\n original=\n" + original +
+                ",\n circular=" + circular +
+                '}';
     }
-
 }

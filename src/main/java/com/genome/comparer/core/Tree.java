@@ -230,4 +230,13 @@ public class Tree {
         List<Genome> allGenomes = new ArrayList<>(genomes);
         return root.getGenome(allGenomes, fingerprintConverter);
     }
+
+    @Override
+    public String toString() {
+        return "Tree{" +
+                "adjacencies=" + adjacencies +
+                ", root=" + root +
+                ", genomes=" + genomes +
+                '}';
+    }
 }

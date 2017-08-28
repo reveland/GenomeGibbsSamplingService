@@ -2,6 +2,7 @@ package com.genome.comparer.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class GenomeReprMaker {
         List<BlockData> blocks = listOfSquareListsR.stream()
             .flatMap(squareList -> squareList.getSquares().stream())
             .map(square -> new BlockData(square.getId(), square.getLabel(), 1))
-            .sorted((o1, o2) -> o1.getId() - o2.getId())
+            .sorted(Comparator.comparingInt(BlockData::getId))
             .collect(Collectors.toList());
 
         return new ComparerData(blocks, Arrays.asList(squaresToGenome(listOfSquareListsR, "referenceGenom"),

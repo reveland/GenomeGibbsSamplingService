@@ -45,13 +45,13 @@ public class ComparerController {
     @Autowired
     private FittedSquareListMaker fitter;
 
-    private String inputGenomePath = "data/destilled.txt";
+    private String inputGenomePath = "data/test_genome_data.perm";
     private GibbsSampler gibbsSamplerTask;
     private Thread gibbsSamplerThread;
 
     @RequestMapping(value = "/start", method = RequestMethod.GET)
     public void start() throws IOException {
-        LOGGER.info("start");
+        LOGGER.info("Started");
 
         List<Genome> genomes = GenomeReader.read(inputGenomePath);
 
@@ -74,7 +74,7 @@ public class ComparerController {
 
     @RequestMapping(value = "/stop", method = RequestMethod.GET)
     public void stop() {
-        LOGGER.info("stop");
+        LOGGER.info("Stopped");
         if (gibbsSamplerThread != null) {
             gibbsSamplerThread.stop();
             gibbsSamplerThread = null;
@@ -83,22 +83,39 @@ public class ComparerController {
         }
     }
 
+    @RequestMapping(value = "/tree", method = RequestMethod.GET)
+    public String getTree() {
+        Tree treeFromTask = gibbsSamplerTask.getTree();
+        String newick = treeFromTask.root.convertToNewick(0);
+        LOGGER.info("Get Tree: \nObject: {}\nNewick: {}", treeFromTask, newick);
+        return newick;
+    }
+
     @RequestMapping(value = "/genome", method = RequestMethod.GET)
-    public ComparerData getGenome(@RequestParam String refGenomeName, @RequestParam String genomeName1,
-        @RequestParam String genomeName2) {
-        LOGGER.info("get genome");
+    public ComparerData getGenome(@RequestParam String refGenomeName,
+                                  @RequestParam String genomeName1,
+                                  @RequestParam String genomeName2) {
 
         Tree treeFromTask = gibbsSamplerTask.getTree();
-        FingerprintToGenomeConverter fingerprintConverter = new FingerprintToGenomeConverter(treeFromTask.adjacencies);
+
+        // fingerprint converter could be field? the adjacencies doesn't change
+        FingerprintToGenomeConverter fingerprintConverter =
+                new FingerprintToGenomeConverter(treeFromTask.adjacencies);
+
         List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
         Map<String, Genome> genomesMap = genomes.stream()
-            .collect(Collectors.toMap(Genome::getName, genome -> genome));
+                .collect(Collectors.toMap(Genome::getName, genome -> genome));
 
         Genome genome1 = genomesMap.get(genomeName1);
         Genome genome2 = genomesMap.get(genomeName2);
         Genome referenceGenome = genomesMap.get(refGenomeName);
 
+        LOGGER.info("\nGet Comparer Data: \nReference: {}\nGenome1: {}\nGenome2: {}",
+                referenceGenome, genome1, genome2);
+
         List<RefSquare> refSquares = referenceReprMaker.make(referenceGenome);
+
+        LOGGER.info("\nReference Squares: {}", refSquares);
 
         List<Chromosome> originalChromosomesR = referenceGenome.original;
         List<Chromosome> originalChromosomes1 = genome1.original;
@@ -108,65 +125,13 @@ public class ComparerController {
         List<SquareList> listOfSquareLists1 = fitter.fit(originalChromosomes1, refSquares);
         List<SquareList> listOfSquareLists2 = fitter.fit(originalChromosomes2, refSquares);
 
-        return genomeReprMaker.makeComparerData(listOfSquareListsR, listOfSquareLists1, listOfSquareLists2);
-    }
+        LOGGER.info("\nFitted Square Lists: \nReference: {}\nGenome1: {}\nGenome2: {}",
+                listOfSquareListsR, listOfSquareLists1, listOfSquareLists2);
 
-    @RequestMapping(value = "/one", method = RequestMethod.GET)
-    public Genome getOneGenome(@RequestParam String genomeName) {
-        LOGGER.info("get one genome");
+        ComparerData comparerData = genomeReprMaker.makeComparerData(listOfSquareListsR, listOfSquareLists1, listOfSquareLists2);
 
-        Tree treeFromTask = gibbsSamplerTask.getTree();
-        FingerprintToGenomeConverter fingerprintConverter = new FingerprintToGenomeConverter(treeFromTask.adjacencies);
-        List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
-        Map<String, Genome> genomesMap = genomes.stream()
-            .collect(Collectors.toMap(Genome::getName, genome -> genome));
+        LOGGER.info("\nComparer Data: \n{}", comparerData);
 
-        Genome genome = genomesMap.get(genomeName);
-
-        List<Chromosome> originalChromosomes = genome.original;
-
-        LOGGER.info("list of genomes: {}\n", genomes);
-        LOGGER.info("genome original: {}\n", fingerprintConverter.convert(genomeName, genome.fingerprint).original);
-        LOGGER.info("originalChromosomes: {}\n", originalChromosomes);
-        LOGGER.info("fingerprint: {}\n", genome.fingerprint);
-
-        return genome;
-    }
-
-    @RequestMapping(value = "/sample", method = RequestMethod.GET)
-    public GenomeRepr sample(@RequestParam String refGenomeName, @RequestParam String genomeName) {
-        LOGGER.info("sample");
-
-        Tree treeFromTask = gibbsSamplerTask.getTree();
-        LOGGER.info(String.valueOf(treeFromTask.root.logscore));
-
-        ReferenceReprMaker referenceReprMaker = new ReferenceReprMaker();
-        GenomeReprMaker genomeReprMaker = new GenomeReprMaker();
-        FittedSquareListMaker fitter = new FittedSquareListMaker();
-
-        List<SquareList> squareLists;
-        List<RefSquare> refSquares = new ArrayList<>();
-        List<Chromosome> chromosomes = new ArrayList<>();
-
-        FingerprintToGenomeConverter fingerprintConverter = new FingerprintToGenomeConverter(treeFromTask.adjacencies);
-        List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
-
-        for (Genome genome : genomes) {
-            if (genome.getName().equals(genomeName)) {
-                chromosomes = genome.original;
-            }
-            if (genome.getName().equals(refGenomeName)) {
-                refSquares = referenceReprMaker.make(genome);
-            }
-        }
-        squareLists = fitter.fit(chromosomes, refSquares);
-        return genomeReprMaker.make(squareLists, genomeName);
-    }
-
-    @RequestMapping(value = "/tree", method = RequestMethod.GET)
-    public String getTree() {
-        LOGGER.info("get tree");
-        Tree treeFromTask = gibbsSamplerTask.getTree();
-        return treeFromTask.root.convertToNewick(0);
+        return comparerData;
     }
 }

@@ -8,6 +8,9 @@ import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.core.Tree;
 import com.genome.comparer.core.TreeNode;
 
+/**
+ * Looks like a safer TreeMaker
+ */
 public class VertebrateTreeConstructor {
 
     public static Tree treeBuilder(String inputPath) throws IOException {

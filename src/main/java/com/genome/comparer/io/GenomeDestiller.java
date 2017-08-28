@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class reads the 8 Vertebrates genomes and selects those synteny blocks
@@ -15,13 +16,13 @@ public class GenomeDestiller {
 
     public static void main(String[] args) throws IOException {
         int[] counts = new int[2186];
-        ArrayList<ArrayList<String>> lines = new ArrayList<>();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("./data/HMMRDCOC_100_300.perm")));
-        ArrayList<String> currentReaders = new ArrayList<>();
+        List<List<String>> lines = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(new File("./data/HMMRDCOC_100_300.perm")));
+        List<String> currentReaders = new ArrayList<>();
         String s;
-        s = bufferedReader.readLine();
+        s = reader.readLine();
         currentReaders.add(s);
-        while ((s = bufferedReader.readLine()) != null) {
+        while ((s = reader.readLine()) != null) {
             if (s.length() != 0 && s.charAt(0) != '>') {
                 currentReaders.add(s);
                 if (s.charAt(0) != '#') {
@@ -45,7 +46,7 @@ public class GenomeDestiller {
             }
         }
         FileWriter fw = new FileWriter(new File("./data/destilled.txt"));
-        for (ArrayList<String> line : lines) {
+        for (List<String> line : lines) {
             currentReaders = line;
             for (String CurrentReader : currentReaders) {
                 s = CurrentReader;

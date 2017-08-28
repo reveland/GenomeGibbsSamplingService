@@ -1,6 +1,7 @@
 package com.genome.comparer.utils;
 
 import static com.genome.comparer.service.SyntenyReCounter.makeChains;
+import static com.genome.comparer.service.SyntenyReCounter.reversePair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class FingerprintToGenomeConverter {
 
         ArrayList<int[]> reversedPairs = new ArrayList<>();
         for (int[] pair : originalPairs) {
-            reversedPairs.add(pair);
+            reversedPairs.add(reversePair(pair));
         }
 
         List<List<Integer>> chromosomes = makeChains(reversedPairs);

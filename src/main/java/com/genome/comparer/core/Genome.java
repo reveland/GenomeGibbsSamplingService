@@ -52,12 +52,13 @@ public class Genome {
     @Override
     public String toString() {
         return "Genome{" +
-                "name='" + name + '\'' +
-                ",\n adjacencies=" + adjacencies.stream().map(ints ->
+                "\nname=" + name +
+                "\nadjacencies=" + adjacencies.stream().map(ints ->
                 "(" + ints[0] + "," + ints[1] + ")").collect(Collectors.toList()) +
-                ",\n fingerprint=" + Arrays.toString(fingerprint) +
-                ",\n original=\n" + original +
-                ",\n circular=" + circular +
+                "\nfingerprint=" + Arrays.toString(fingerprint) +
+                "\noriginal=\n" + original.stream().map(chr ->
+                "\n" + chr).collect(Collectors.toList()) +
+                "\ncircular=" + circular +
                 '}';
     }
 }

@@ -15,7 +15,7 @@ public class PooledAdjacencies {
                 for (int i = 0; !found && i < adjacencies.size(); i++) {
                     int[] otherindex = adjacencies.get(i).index;
                     found = (index[0] == otherindex[0] && index[1] == otherindex[1]) ||
-                        (index[0] == otherindex[1] && index[1] == otherindex[0]);
+                            (index[0] == otherindex[1] && index[1] == otherindex[0]);
                 }
                 if (!found) {
                     //new adjacency, construct, and find the conflicts
@@ -24,9 +24,9 @@ public class PooledAdjacencies {
                     //System.out.println("New adjacency: ("+newadjacency.index[0]+","+newadjacency.index[1]+")");
                     for (Adjacency adjacency : adjacencies) {
                         if (adjacency.index[0] == newadjacency.index[0] ||
-                            adjacency.index[0] == newadjacency.index[1] ||
-                            adjacency.index[1] == newadjacency.index[0] ||
-                            adjacency.index[1] == newadjacency.index[1]) {
+                                adjacency.index[0] == newadjacency.index[1] ||
+                                adjacency.index[1] == newadjacency.index[0] ||
+                                adjacency.index[1] == newadjacency.index[1]) {
                             adjacency.inconflict.add(newadjacency);
                             newadjacency.inconflict.add(adjacency);
                             // System.out.println("New conflict: (" + adjacency.index[0] + "," + adjacency.index[1]
@@ -48,9 +48,9 @@ public class PooledAdjacencies {
             for (int j = 0; !found && j < genome.adjacencies.size(); j++) {
                 int[] currentgenomeindex = genome.adjacencies.get(j);
                 found = ((currentgenomeindex[0] == currentindex[0] &&
-                    currentgenomeindex[1] == currentindex[1]) ||
-                    (currentgenomeindex[0] == currentindex[1] &&
-                        currentgenomeindex[1] == currentindex[0]));
+                        currentgenomeindex[1] == currentindex[1]) ||
+                        (currentgenomeindex[0] == currentindex[1] &&
+                                currentgenomeindex[1] == currentindex[0]));
             }
             if (found) {
                 list[i] = 1;
@@ -70,5 +70,10 @@ public class PooledAdjacencies {
 
     public void setAdjacencies(final ArrayList<Adjacency> adjacencies) {
         this.adjacencies = adjacencies;
+    }
+
+    @Override
+    public String toString() {
+        return "{" + adjacencies + '}';
     }
 }

@@ -3,6 +3,7 @@ package com.genome.comparer.core;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.genome.comparer.io.GenomeReader;
 import com.genome.comparer.utils.FingerprintToGenomeConverter;
@@ -109,6 +110,7 @@ public class Tree {
 
     /**
      * for debugging reasons only
+     *
      * @param args
      * @throws IOException
      */
@@ -118,6 +120,7 @@ public class Tree {
     }
 
     // not part of the original core
+
     /**
      * Replaces the root of the tree to a position where the means of the branch
      * lengths on either side of the root are equal. Recursive.
@@ -220,7 +223,7 @@ public class Tree {
             }
         } else {
             System.err.println("ERROR: root has no children ! " + "leftChild:" + root.hasLeftChild() + "  rightChild:"
-                + root.hasRightChild());
+                    + root.hasRightChild());
             System.exit(4);
         }
     }
@@ -234,9 +237,9 @@ public class Tree {
     @Override
     public String toString() {
         return "Tree{" +
-                "adjacencies=" + adjacencies +
-                ", root=" + root +
-                ", genomes=" + genomes +
+                "\nadjacencies=" + adjacencies +
+                "\ngenomes=" + genomes.stream().map(genome ->
+                "\n" + genome).collect(Collectors.toList()) +
                 '}';
     }
 }

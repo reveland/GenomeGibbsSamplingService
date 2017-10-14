@@ -117,7 +117,7 @@ public class SyntenyReCounter {
         for (int[] pair : pairs) {
             chromosome.add(pair[0]);
         }
+        chromosome.add(pairs.get(pairs.size() - 1)[1]);
         return chromosome;
     }
-
 }

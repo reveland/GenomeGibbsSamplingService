@@ -102,6 +102,8 @@ public class ComparerController {
         FingerprintToGenomeConverter fingerprintConverter =
                 new FingerprintToGenomeConverter(treeFromTask.adjacencies);
 
+        LOGGER.info("\ntreeFromTask adjs: {}", treeFromTask.adjacencies);
+
         List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
         Map<String, Genome> genomesMap = genomes.stream()
                 .collect(Collectors.toMap(Genome::getName, genome -> genome));

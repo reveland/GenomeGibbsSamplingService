@@ -26,7 +26,7 @@ public class AdjacencyTest {
     @Test
     public void testToString() {
         Adjacency adjacency = new Adjacency(TEST_ADJACENCIES);
-        String expected = "(1,2)";
+        String expected = "[1,2]";
 
         String actual = adjacency.toString();
 

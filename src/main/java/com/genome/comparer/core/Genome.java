@@ -13,16 +13,18 @@ public class Genome {
     public ArrayList<int[]> adjacencies;
     public int[] fingerprint;
     public List<Chromosome> original;
-    private boolean circular = false;
+    private boolean circular;
 
     public Genome(String name, List<int[]> adjacencies) {
         this.name = name;
         this.adjacencies = new ArrayList<>(adjacencies);
+        this.circular = false;
     }
 
     public Genome(List<int[]> adjacencies, String name) {
         this.name = name;
         this.adjacencies = new ArrayList<>(adjacencies);
+        this.circular = false;
     }
 
     public String getName() {
@@ -51,14 +53,14 @@ public class Genome {
 
     @Override
     public String toString() {
-        return "Genome{" +
-                "\nname=" + name +
-                "\nadjacencies=" + adjacencies.stream().map(ints ->
-                "(" + ints[0] + "," + ints[1] + ")").collect(Collectors.toList()) +
-                "\nfingerprint=" + Arrays.toString(fingerprint) +
-                "\noriginal=\n" + original.stream().map(chr ->
+        return "{" +
+                "\n\"name\":" + "\"" + name + "\"" +
+                ",\n\"adjacencies\":" + adjacencies.stream().map(ints ->
+                "[" + ints[0] + "," + ints[1] + "]").collect(Collectors.toList()) +
+                ",\n\"fingerprint\":" + Arrays.toString(fingerprint) +
+                ",\n\"original\":" + original.stream().map(chr ->
                 "\n" + chr).collect(Collectors.toList()) +
-                "\ncircular=" + circular +
-                '}';
+                ",\n\"circular\":" + circular +
+                "\n}";
     }
 }

@@ -168,7 +168,7 @@ public class TreeNode {
             sankoffsum[0] = sum * sum1;
 
             boolean is1inConflict = false;
-            ArrayList<Adjacency> conflicts = owner.adjacencies.adjacencies.get(x).inconflict;
+            List<Adjacency> conflicts = owner.adjacencies.adjacencies.get(x).inconflict;
             for (int i = 0; !is1inConflict && i < conflicts.size(); i++) {
                 int y = owner.adjacencies.adjacencies.indexOf(conflicts.get(i));
                 is1inConflict = (fingerprint[y] == 1);

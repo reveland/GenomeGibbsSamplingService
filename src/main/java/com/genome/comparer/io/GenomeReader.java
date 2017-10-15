@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public class GenomeReader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GenomeReader.class);
+    // private static final Logger LOGGER = LoggerFactory.getLogger(GenomeReader.class);
 
     public static ArrayList<Genome> read(String filename) throws IOException {
         BufferedReader reader = getBufferedReader(filename);
@@ -28,13 +28,13 @@ public class GenomeReader {
                 Genome currentGenome = new Genome(adjacencies, genomeName);
                 currentGenome.original = original;
                 currentGenome.setCircular(false);
-                LOGGER.debug(String.valueOf(currentGenome));
+                // LOGGER.debug(String.valueOf(currentGenome));
                 genomes.add(currentGenome);
                 // preparing for read the new genome data
                 genomeName = getGenomeName(line);
                 adjacencies = new ArrayList<>();
                 original = new ArrayList<>();
-            } else if(notBlankLine(line)) {
+            } else if (notBlankLine(line)) {
                 List<Integer> chromosomeAdj = new ArrayList<>();
                 if (isChromosomeNameLine(line)) {
                     chromosomeName = getChromosomeName(line);
@@ -67,7 +67,7 @@ public class GenomeReader {
         Genome currentGenome = new Genome(adjacencies, genomeName);
         currentGenome.original = original;
         currentGenome.setCircular(false);
-        LOGGER.debug(String.valueOf(currentGenome));
+        // LOGGER.debug(String.valueOf(currentGenome));
         genomes.add(currentGenome);
         reader.close();
         return genomes;
@@ -102,8 +102,7 @@ public class GenomeReader {
         ArrayList<Genome> genomes = read("./data/test_genome_data.perm");
         System.out.println("ready");
         PooledAdjacencies pooledAdjacencies = new PooledAdjacencies(genomes);
-        System.out.println(
-                "number of pooled deprecatedAdjacencies: " + pooledAdjacencies.getAdjacencies().size());
+        System.out.println("number of pooled deprecatedAdjacencies: " + pooledAdjacencies.getAdjacencies().size());
         for (Genome genome : genomes) {
             genome.fingerprint = pooledAdjacencies.fingerprint(genome);
         }

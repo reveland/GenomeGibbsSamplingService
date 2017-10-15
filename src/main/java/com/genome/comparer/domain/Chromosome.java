@@ -22,9 +22,6 @@ public class Chromosome {
 
     @Override
     public String toString() {
-        return "Chromosome{" +
-            "label=" + label +
-            " adjacencies=" + adjacencies +
-            "}";
+        return "{\"label\":\"" + label + "\", \"adjacencies\":" + adjacencies + "}";
     }
 }

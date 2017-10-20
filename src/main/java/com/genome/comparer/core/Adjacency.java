@@ -36,13 +36,17 @@ public class Adjacency {
 
     @Override
     public boolean equals(Object o) {
+
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         Adjacency adjacency = (Adjacency) o;
+        int[] adj1 = adjacency.getAdjacency();
+        int[] adj2 = this.getAdjacency();
 
-        if (!Arrays.equals(index, adjacency.index)) return false;
-        return inconflict != null ? inconflict.equals(adjacency.inconflict) : adjacency.inconflict == null;
+        return ((adj2[0] == adj1[0] && adj2[1] == adj1[1])
+                || (adj2[0] == adj1[1] && adj2[1] == adj1[0]));
+
     }
 
     @Override
@@ -56,4 +60,6 @@ public class Adjacency {
     public String toString() {
         return '[' + String.valueOf(index[0]) + ',' + String.valueOf(index[1]) + ']';
     }
+
+
 }

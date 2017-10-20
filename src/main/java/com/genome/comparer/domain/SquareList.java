@@ -21,10 +21,7 @@ public class SquareList {
 
     @Override
     public String toString() {
-        return "\nSquareList{" +
-            "label='" + label + '\'' +
-            ", squares=" + squares +
-            '}';
+        return "{\"label\":\"" + label + "\", \"squares\":" + squares + "}";
     }
 
     @Override

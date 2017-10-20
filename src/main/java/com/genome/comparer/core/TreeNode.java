@@ -1,6 +1,6 @@
 package com.genome.comparer.core;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.genome.comparer.utils.FingerprintToGenomeConverter;
@@ -83,16 +83,16 @@ public class TreeNode {
 			 */
             for (int i = 0; i < fitchauxiliary.length; i++) {
                 if ((leftChild.fitchauxiliary[i] == 2 && rightChild.fitchauxiliary[i] == 2) ||
-                    (leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 1) ||
-                    (leftChild.fitchauxiliary[i] == 1 && rightChild.fitchauxiliary[i] == 0)) {
+                        (leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 1) ||
+                        (leftChild.fitchauxiliary[i] == 1 && rightChild.fitchauxiliary[i] == 0)) {
                     fitchauxiliary[i] = 2;
                     if ((leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 1) ||
-                        (leftChild.fitchauxiliary[i] == 1 && rightChild.fitchauxiliary[i] == 0)) {
+                            (leftChild.fitchauxiliary[i] == 1 && rightChild.fitchauxiliary[i] == 0)) {
                         fitchcheckscore++;
                     }
                 } else if ((leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 0) ||
-                    (leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 2) ||
-                    (leftChild.fitchauxiliary[i] == 2 && rightChild.fitchauxiliary[i] == 0)) {
+                        (leftChild.fitchauxiliary[i] == 0 && rightChild.fitchauxiliary[i] == 2) ||
+                        (leftChild.fitchauxiliary[i] == 2 && rightChild.fitchauxiliary[i] == 0)) {
                     fitchauxiliary[i] = 0;
                 } else {
                     fitchauxiliary[i] = 1;
@@ -154,9 +154,9 @@ public class TreeNode {
             leftChild.calculateSankoff(x);
             rightChild.calculateSankoff(x);
             sankoffscore[0] = Math.min(leftChild.sankoffscore[0], leftChild.sankoffscore[1] + 1) +
-                Math.min(rightChild.sankoffscore[0], rightChild.sankoffscore[1] + 1);
+                    Math.min(rightChild.sankoffscore[0], rightChild.sankoffscore[1] + 1);
             sankoffscore[1] = Math.min(leftChild.sankoffscore[0] + 1, leftChild.sankoffscore[1]) +
-                Math.min(rightChild.sankoffscore[0] + 1, rightChild.sankoffscore[1]);
+                    Math.min(rightChild.sankoffscore[0] + 1, rightChild.sankoffscore[1]);
             int sum = 0;
             sum += (leftChild.sankoffscore[0] <= leftChild.sankoffscore[1] + 1 ? leftChild.sankoffsum[0] : 0);
             sum += (leftChild.sankoffscore[0] >= leftChild.sankoffscore[1] + 1 ? leftChild.sankoffsum[1] : 0);
@@ -211,23 +211,23 @@ public class TreeNode {
             if (p < sankoffsum[0]) {
                 fingerprint[x] = 0;
                 leftChild.sankoffmark[0] =
-                    (leftChild.sankoffscore[0] <= leftChild.sankoffscore[1] + 1) && (leftChild.sankoffsum[0] != 0);
+                        (leftChild.sankoffscore[0] <= leftChild.sankoffscore[1] + 1) && (leftChild.sankoffsum[0] != 0);
                 leftChild.sankoffmark[1] =
-                    (leftChild.sankoffscore[0] >= leftChild.sankoffscore[1] + 1) && (leftChild.sankoffsum[1] != 0);
+                        (leftChild.sankoffscore[0] >= leftChild.sankoffscore[1] + 1) && (leftChild.sankoffsum[1] != 0);
                 rightChild.sankoffmark[0] =
-                    (rightChild.sankoffscore[0] <= rightChild.sankoffscore[1] + 1) && (rightChild.sankoffsum[0] != 0);
+                        (rightChild.sankoffscore[0] <= rightChild.sankoffscore[1] + 1) && (rightChild.sankoffsum[0] != 0);
                 rightChild.sankoffmark[1] =
-                    (rightChild.sankoffscore[0] >= rightChild.sankoffscore[1] + 1) && (rightChild.sankoffsum[0] != 0);
+                        (rightChild.sankoffscore[0] >= rightChild.sankoffscore[1] + 1) && (rightChild.sankoffsum[0] != 0);
             } else {
                 fingerprint[x] = 1;
                 leftChild.sankoffmark[0] =
-                    (leftChild.sankoffscore[0] + 1 <= leftChild.sankoffscore[1]) && (leftChild.sankoffsum[0] != 0);
+                        (leftChild.sankoffscore[0] + 1 <= leftChild.sankoffscore[1]) && (leftChild.sankoffsum[0] != 0);
                 leftChild.sankoffmark[1] =
-                    (leftChild.sankoffscore[0] + 1 >= leftChild.sankoffscore[1]) && (leftChild.sankoffsum[1] != 0);
+                        (leftChild.sankoffscore[0] + 1 >= leftChild.sankoffscore[1]) && (leftChild.sankoffsum[1] != 0);
                 rightChild.sankoffmark[0] =
-                    (rightChild.sankoffscore[0] + 1 <= rightChild.sankoffscore[1]) && (rightChild.sankoffsum[0] != 0);
+                        (rightChild.sankoffscore[0] + 1 <= rightChild.sankoffscore[1]) && (rightChild.sankoffsum[0] != 0);
                 rightChild.sankoffmark[1] =
-                    (rightChild.sankoffscore[0] + 1 >= rightChild.sankoffscore[1]) && (rightChild.sankoffsum[0] != 0);
+                        (rightChild.sankoffscore[0] + 1 >= rightChild.sankoffscore[1]) && (rightChild.sankoffsum[0] != 0);
             }
 
             leftChild.select(x);
@@ -267,8 +267,8 @@ public class TreeNode {
                 name = "vert" + Integer.toString(i);
             }
             return "(" + leftChild.convertToNewick(2 * i + 1) + " , "
-                + rightChild.convertToNewick(2 * i + 2) + ")"
-                + name + ":" + ((evolDist == 0.0) ? "1.0" : evolDist);
+                    + rightChild.convertToNewick(2 * i + 2) + ")"
+                    + name + ":" + ((evolDist == 0.0) ? "1.0" : evolDist);
         }
     }
 
@@ -291,8 +291,8 @@ public class TreeNode {
                 int lChildren = leftChild.getNumOfLeaves();
                 int rChildren = rightChild.getNumOfLeaves();
                 avgLenToLeaves = (float) (1.0 / (lChildren + rChildren))
-                    * (lChildren * (leftChild.getAvgLenToLeaves() + leftChild.evolDist)
-                    + rChildren * (rightChild.getAvgLenToLeaves() + rightChild.evolDist));
+                        * (lChildren * (leftChild.getAvgLenToLeaves() + leftChild.evolDist)
+                        + rChildren * (rightChild.getAvgLenToLeaves() + rightChild.evolDist));
             }
         }
         return avgLenToLeaves;
@@ -323,8 +323,7 @@ public class TreeNode {
         return getNumOfLeaves();
     }
 
-    public List<Genome> getGenome(List<Genome> genomes,
-        FingerprintToGenomeConverter fingerprintConverter) {
+    public List<Genome> getGenomes(List<Genome> genomes, FingerprintToGenomeConverter fingerprintConverter) {
         if ((leftChild == null) || (rightChild == null)) {
             boolean isContains = false;
             for (Genome genome : genomes) {
@@ -345,9 +344,17 @@ public class TreeNode {
         } else {
             Genome currentGenome = fingerprintConverter.convert(name, fingerprint);
             genomes.add(currentGenome);
-            return leftChild.getGenome(rightChild.getGenome(genomes, fingerprintConverter),
-                fingerprintConverter);
+            return leftChild.getGenomes(rightChild.getGenomes(genomes, fingerprintConverter), fingerprintConverter);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\n\"fingerprint\":" + Arrays.toString(fingerprint) +
+                ",\n\"leftChild\":" + (leftChild != null ? leftChild.toString() : "") +
+                ",\n\"rightChild\":" + (rightChild != null ? rightChild.toString() : "") +
+                '}';
     }
 }
 

@@ -57,6 +57,7 @@ public class ComparerController {
 
         PooledAdjacencies pooledAdjacencies = new PooledAdjacencies(genomes);
         for (Genome genome : genomes) {
+            //LOGGER.info("adj: {}", pooledAdjacencies.fingerprint(genome));
             genome.fingerprint = pooledAdjacencies.fingerprint(genome);
         }
 
@@ -99,10 +100,9 @@ public class ComparerController {
         Tree treeFromTask = gibbsSamplerTask.getTree();
 
         // fingerprint converter could be field? the adjacencies doesn't change
-        FingerprintToGenomeConverter fingerprintConverter =
-                new FingerprintToGenomeConverter(treeFromTask.adjacencies);
+        FingerprintToGenomeConverter fingerprintConverter = new FingerprintToGenomeConverter(treeFromTask.adjacencies);
 
-        LOGGER.info("\ntreeFromTask adjs: {}", treeFromTask.adjacencies);
+        LOGGER.info("PooledAdjacencies: \n{}", treeFromTask.adjacencies);
 
         List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
         Map<String, Genome> genomesMap = genomes.stream()
@@ -112,27 +112,23 @@ public class ComparerController {
         Genome genome2 = genomesMap.get(genomeName2);
         Genome referenceGenome = genomesMap.get(refGenomeName);
 
-        LOGGER.info("\nGet Comparer Data: \nReference: {}\nGenome1: {}\nGenome2: {}",
+        LOGGER.info("\"Get Comparer Data\":\n{\"Reference\": {},\n\"Genome1\": {},\n\"Genome2\": {}}",
                 referenceGenome, genome1, genome2);
 
-        List<RefSquare> refSquares = referenceReprMaker.make(referenceGenome);
+        List<RefSquare> refSquares = referenceReprMaker.make(referenceGenome.original);
 
-        LOGGER.info("\nReference Squares: {}", refSquares);
+        LOGGER.info("\n\"Reference Squares\": {}", refSquares);
 
-        List<Chromosome> originalChromosomesR = referenceGenome.original;
-        List<Chromosome> originalChromosomes1 = genome1.original;
-        List<Chromosome> originalChromosomes2 = genome2.original;
+        List<SquareList> listOfSquareListsR = fitter.fit(referenceGenome.original, refSquares);
+        List<SquareList> listOfSquareLists1 = fitter.fit(genome1.original, refSquares);
+        List<SquareList> listOfSquareLists2 = fitter.fit(genome2.original, refSquares);
 
-        List<SquareList> listOfSquareListsR = fitter.fit(originalChromosomesR, refSquares);
-        List<SquareList> listOfSquareLists1 = fitter.fit(originalChromosomes1, refSquares);
-        List<SquareList> listOfSquareLists2 = fitter.fit(originalChromosomes2, refSquares);
-
-        LOGGER.info("\nFitted Square Lists: \nReference: {}\nGenome1: {}\nGenome2: {}",
+        LOGGER.info("\n\"Fitted Square Lists\": \n\"Reference\": {},\n\"Genome1\": {},\n\"Genome2\": {}",
                 listOfSquareListsR, listOfSquareLists1, listOfSquareLists2);
 
         ComparerData comparerData = genomeReprMaker.makeComparerData(listOfSquareListsR, listOfSquareLists1, listOfSquareLists2);
 
-        LOGGER.info("\nComparer Data: \n{}", comparerData);
+        //LOGGER.info("\nComparer Data: \n{}", comparerData);
 
         return comparerData;
     }

@@ -14,12 +14,12 @@ public class ReferenceReprMaker {
 
     private static int i = 0;
 
-    public List<RefSquare> make(Genome genome) {
+    public List<RefSquare> make(List<Chromosome> original) {
         i = 0;
-        return genome.original.stream()
-            .flatMap(chromosome -> chromosome.getAdjacencies().stream()
-                .map(adjacency -> createRefSquare(chromosome, adjacency)))
-            .collect(Collectors.toList());
+        return original.stream()
+                .flatMap(chromosome -> chromosome.getAdjacencies().stream()
+                        .map(adjacency -> createRefSquare(chromosome, adjacency)))
+                .collect(Collectors.toList());
 
         //        List<RefSquare> RefSquares = new ArrayList<>();
         //        List<Chromosome> originalGenome = genome.original;

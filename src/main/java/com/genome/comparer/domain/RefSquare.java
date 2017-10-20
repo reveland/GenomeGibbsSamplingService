@@ -10,7 +10,7 @@ public class RefSquare {
         this.label = label;
     }
 
-    public RefSquare(final int adjacency, final String label, final int id) {
+    public RefSquare(int adjacency, String label, int id) {
         this.adjacency = adjacency;
         this.label = label;
         this.id = id;
@@ -34,7 +34,7 @@ public class RefSquare {
 
     @Override
     public String toString() {
-        return String.format("RefSquare(adjacency=%d, label=%s)\n", adjacency, label);
+        return String.format("{\"id\":%d, \"adjacency\":%d, \"label\":\"%s\"}", id, adjacency, label);
     }
 
     @Override

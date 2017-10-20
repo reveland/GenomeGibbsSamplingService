@@ -35,10 +35,7 @@ public class Square {
 
     @Override
     public String toString() {
-        return "\nSquare{" +
-            "label='" + label + '\'' +
-            ", inverted=" + inverted +
-            "}";
+        return "{\"id\":" + id + ", \"label\":\"" + label + "\", \"inverted\":" + inverted + "}";
     }
 
     @Override

@@ -231,15 +231,16 @@ public class Tree {
     // not part of the original core
     public List<Genome> getGenomes(FingerprintToGenomeConverter fingerprintConverter) {
         List<Genome> allGenomes = new ArrayList<>(genomes);
-        return root.getGenome(allGenomes, fingerprintConverter);
+        return root.getGenomes(allGenomes, fingerprintConverter);
     }
 
     @Override
     public String toString() {
-        return "Tree{" +
-                "\nadjacencies=" + adjacencies +
-                "\ngenomes=" + genomes.stream().map(genome ->
+        return "{" +
+                "\n\"adjacencies\":" + adjacencies +
+                ",\n\"genomes\":" + genomes.stream().map(genome ->
                 "\n" + genome).collect(Collectors.toList()) +
-                '}';
+                ",\n\"tree\":" + root.toString() +
+                "\n}";
     }
 }

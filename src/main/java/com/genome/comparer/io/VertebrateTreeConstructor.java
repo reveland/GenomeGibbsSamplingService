@@ -3,7 +3,7 @@ package com.genome.comparer.io;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.genome.comparer.core.Genome;
+import com.genome.comparer.domain.Genome;
 import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.core.Tree;
 import com.genome.comparer.core.TreeNode;

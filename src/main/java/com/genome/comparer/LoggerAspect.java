@@ -1,6 +1,6 @@
 package com.genome.comparer;
 
-import com.genome.comparer.core.Genome;
+import com.genome.comparer.domain.Genome;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

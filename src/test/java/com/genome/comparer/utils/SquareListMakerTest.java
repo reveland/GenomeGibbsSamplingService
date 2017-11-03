@@ -4,53 +4,54 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.genome.comparer.service.SquareListMaker;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.genome.comparer.core.Genome;
+import com.genome.comparer.domain.Genome;
 import com.genome.comparer.domain.Chromosome;
-import com.genome.comparer.domain.RefSquare;
+import com.genome.comparer.domain.Square;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReferenceReprMakerTest {
+public class SquareListMakerTest {
 
     private static final String CHROMOSOME_LABEL_1 = "chromosomeLabel1";
     private static final String CHROMOSOME_LABEL_2 = "chromosomeLabel2";
     private static final String CHROMOSOME_LABEL_3 = "chromosomeLabel3";
 
     @InjectMocks
-    private ReferenceReprMaker underTest;
+    private SquareListMaker underTest;
 
     @Test
     public void make() {
         Genome genome = new Genome(Collections.emptyList(), "genomeName");
         genome.original = createChromosomes();
-        List<RefSquare> expected = getExpectedRefSquares();
+        List<Square> expected = getExpectedRefSquares();
 
-        List<RefSquare> actual = underTest.make(genome.original);
+        List<Square> actual = underTest.make(genome.original);
 
         Assert.assertEquals(expected, actual);
     }
 
-    private List<RefSquare> getExpectedRefSquares() {
-        return Arrays.asList(new RefSquare(10, CHROMOSOME_LABEL_1),
-            new RefSquare(-20, CHROMOSOME_LABEL_1),
-            new RefSquare(30, CHROMOSOME_LABEL_1),
-            new RefSquare(-40, CHROMOSOME_LABEL_1),
-            new RefSquare(50, CHROMOSOME_LABEL_1),
-            new RefSquare(60, CHROMOSOME_LABEL_2),
-            new RefSquare(-70, CHROMOSOME_LABEL_2),
-            new RefSquare(80, CHROMOSOME_LABEL_2),
-            new RefSquare(-90, CHROMOSOME_LABEL_2),
-            new RefSquare(100, CHROMOSOME_LABEL_2),
-            new RefSquare(1, CHROMOSOME_LABEL_3),
-            new RefSquare(-2, CHROMOSOME_LABEL_3),
-            new RefSquare(3, CHROMOSOME_LABEL_3),
-            new RefSquare(-4, CHROMOSOME_LABEL_3),
-            new RefSquare(5, CHROMOSOME_LABEL_3)
+    private List<Square> getExpectedRefSquares() {
+        return Arrays.asList(new Square(10, CHROMOSOME_LABEL_1),
+            new Square(-20, CHROMOSOME_LABEL_1),
+            new Square(30, CHROMOSOME_LABEL_1),
+            new Square(-40, CHROMOSOME_LABEL_1),
+            new Square(50, CHROMOSOME_LABEL_1),
+            new Square(60, CHROMOSOME_LABEL_2),
+            new Square(-70, CHROMOSOME_LABEL_2),
+            new Square(80, CHROMOSOME_LABEL_2),
+            new Square(-90, CHROMOSOME_LABEL_2),
+            new Square(100, CHROMOSOME_LABEL_2),
+            new Square(1, CHROMOSOME_LABEL_3),
+            new Square(-2, CHROMOSOME_LABEL_3),
+            new Square(3, CHROMOSOME_LABEL_3),
+            new Square(-4, CHROMOSOME_LABEL_3),
+            new Square(5, CHROMOSOME_LABEL_3)
         );
     }
 

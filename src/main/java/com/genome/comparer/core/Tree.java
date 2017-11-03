@@ -3,13 +3,15 @@ package com.genome.comparer.core;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.genome.comparer.domain.Genome;
 import com.genome.comparer.io.GenomeReader;
-import com.genome.comparer.utils.FingerprintToGenomeConverter;
-import com.genome.comparer.utils.Utils;
 
 public class Tree {
+
+    public static Random random = new Random(1200);
 
     public PooledAdjacencies adjacencies;
     public TreeNode root;
@@ -97,7 +99,7 @@ public class Tree {
     }
 
     public void gibbsSampling() {
-        int x = Utils.random.nextInt(adjacencies.adjacencies.size());
+        int x = random.nextInt(adjacencies.adjacencies.size());
         root.calculateSankoff(x);
         // System.out.println("numer of optimal labelling: " +
         //     ((root.sankoffscore[0] <= root.sankoffscore[1] ? root.sankoffsum[0] : 0) +

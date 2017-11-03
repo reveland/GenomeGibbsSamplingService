@@ -1,27 +1,13 @@
 package com.genome.comparer.domain;
 
-public class RefSquare {
+public class Square {
+
     private int adjacency;
     private String label;
-    private int id;
 
-    public RefSquare(int adjacency, String label) {
+    public Square(int adjacency, String label) {
         this.adjacency = adjacency;
         this.label = label;
-    }
-
-    public RefSquare(int adjacency, String label, int id) {
-        this.adjacency = adjacency;
-        this.label = label;
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(final int id) {
-        this.id = id;
     }
 
     public int getAdjacency() {
@@ -34,7 +20,7 @@ public class RefSquare {
 
     @Override
     public String toString() {
-        return String.format("{\"id\":%d, \"adjacency\":%d, \"label\":\"%s\"}", id, adjacency, label);
+        return String.format("{\"adjacency\":%d, \"label\":\"%s\"}", adjacency, label);
     }
 
     @Override
@@ -44,11 +30,11 @@ public class RefSquare {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        RefSquare refSquare = (RefSquare) o;
+        Square square = (Square) o;
 
-        if (adjacency != refSquare.adjacency)
+        if (adjacency != square.adjacency)
             return false;
-        if (label != null ? !label.equals(refSquare.label) : refSquare.label != null)
+        if (label != null ? !label.equals(square.label) : square.label != null)
             return false;
 
         return true;

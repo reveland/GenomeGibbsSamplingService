@@ -1,6 +1,7 @@
 package com.genome.comparer.core;
 
 import com.genome.comparer.domain.Chromosome;
+import com.genome.comparer.domain.Genome;
 import jersey.repackaged.com.google.common.collect.Lists;
 import org.junit.Test;
 

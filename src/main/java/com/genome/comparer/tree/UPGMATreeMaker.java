@@ -2,7 +2,7 @@ package com.genome.comparer.tree;
 
 import java.util.List;
 
-import com.genome.comparer.core.Genome;
+import com.genome.comparer.domain.Genome;
 import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.core.Tree;
 import com.genome.comparer.core.TreeNode;

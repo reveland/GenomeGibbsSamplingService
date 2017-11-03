@@ -1,4 +1,4 @@
-package com.genome.comparer.core;
+package com.genome.comparer.domain;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,5 +1,8 @@
 package com.genome.comparer.core;
 
+import com.genome.comparer.domain.Adjacency;
+import com.genome.comparer.domain.Genome;
+
 import java.util.ArrayList;
 import java.util.List;
 

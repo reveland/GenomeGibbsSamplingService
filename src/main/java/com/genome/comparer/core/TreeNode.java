@@ -1,12 +1,15 @@
 package com.genome.comparer.core;
 
+import com.genome.comparer.domain.Adjacency;
+import com.genome.comparer.domain.Genome;
+
 import java.util.Arrays;
 import java.util.List;
-
-import com.genome.comparer.utils.FingerprintToGenomeConverter;
-import com.genome.comparer.utils.Utils;
+import java.util.Random;
 
 public class TreeNode {
+
+    public static Random random = new Random(1200);
 
     // not part of the original core
     public double evolDist; // distance from its parent
@@ -206,7 +209,7 @@ public class TreeNode {
         if (leftChild != null) {
             sankoffsum[0] *= (sankoffmark[0] ? 1 : 0);
             sankoffsum[1] *= (sankoffmark[1] ? 1 : 0);
-            int p = Utils.random.nextInt(sankoffsum[0] + sankoffsum[1]);
+            int p = random.nextInt(sankoffsum[0] + sankoffsum[1]);
 
             if (p < sankoffsum[0]) {
                 fingerprint[x] = 0;

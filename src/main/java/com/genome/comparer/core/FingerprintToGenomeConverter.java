@@ -1,4 +1,4 @@
-package com.genome.comparer.utils;
+package com.genome.comparer.core;
 
 import static com.genome.comparer.service.SyntenyReCounter.makeChains;
 import static com.genome.comparer.service.SyntenyReCounter.reversePair;
@@ -6,9 +6,8 @@ import static com.genome.comparer.service.SyntenyReCounter.reversePair;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.genome.comparer.core.Genome;
-import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.domain.Chromosome;
+import com.genome.comparer.domain.Genome;
 
 public class FingerprintToGenomeConverter {
 

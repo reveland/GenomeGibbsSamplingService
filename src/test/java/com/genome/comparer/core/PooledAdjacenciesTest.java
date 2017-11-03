@@ -1,14 +1,14 @@
 package com.genome.comparer.core;
 
+import com.genome.comparer.domain.Adjacency;
+import com.genome.comparer.domain.Genome;
 import jersey.repackaged.com.google.common.collect.Lists;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**

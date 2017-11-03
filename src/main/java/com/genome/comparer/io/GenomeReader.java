@@ -4,12 +4,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.genome.comparer.core.Genome;
+import com.genome.comparer.domain.Genome;
 import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.domain.Chromosome;
-import com.genome.comparer.mcmc.GibbsSampler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GenomeReader {
 

@@ -1,6 +1,6 @@
 package com.genome.comparer.tree;
 
-import com.genome.comparer.core.Genome;
+import com.genome.comparer.domain.Genome;
 import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.core.Tree;
 

@@ -21,13 +21,9 @@ import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.core.Tree;
 import com.genome.comparer.tree.UPGMATreeMaker;
 import com.genome.comparer.domain.RefSquare;
-import com.genome.comparer.domain.SquareList;
-import com.genome.comparer.domain.data.ComparerData;
 import com.genome.comparer.io.GenomeReader;
 import com.genome.comparer.mcmc.GibbsSampler;
 import com.genome.comparer.utils.FingerprintToGenomeConverter;
-import com.genome.comparer.utils.FittedSquareListMaker;
-import com.genome.comparer.utils.GenomeReprMaker;
 import com.genome.comparer.utils.ReferenceReprMaker;
 
 @RestController
@@ -37,13 +33,8 @@ public class ComparerController {
 
     @Autowired
     private ReferenceReprMaker referenceReprMaker;
-    @Autowired
-    private GenomeReprMaker genomeReprMaker;
-    @Autowired
-    private FittedSquareListMaker fitter;
 
-    private String inputGenomePath = "data/destilled.txt";
-    //    private String inputGenomePath = "data/test_genome_data.perm";
+    private static final String inputGenomePath = "data/destilled.txt";
     private GibbsSampler gibbsSamplerTask;
     private Thread gibbsSamplerThread;
 
@@ -55,7 +46,6 @@ public class ComparerController {
 
         PooledAdjacencies pooledAdjacencies = new PooledAdjacencies(genomes);
         for (Genome genome : genomes) {
-            //LOGGER.info("adj: {}", pooledAdjacencies.fingerprint(genome));
             genome.fingerprint = pooledAdjacencies.fingerprint(genome);
         }
 
@@ -88,52 +78,6 @@ public class ComparerController {
         String newick = treeFromTask.root.convertToNewick(0);
         LOGGER.info("Get Tree: \nObject: {}\nNewick: {}", treeFromTask, newick);
         return newick;
-    }
-
-    @RequestMapping(value = "/genome", method = RequestMethod.GET)
-    public ComparerData getGenome(@RequestParam String refGenomeName,
-                                  @RequestParam String genomeName1,
-                                  @RequestParam String genomeName2) {
-
-        Tree treeFromTask = gibbsSamplerTask.getTree();
-
-        // fingerprint converter could be field? the adjacencies doesn't change
-        FingerprintToGenomeConverter fingerprintConverter = new FingerprintToGenomeConverter(treeFromTask.adjacencies);
-
-        //LOGGER.info("PooledAdjacencies: \n{}", treeFromTask.adjacencies);
-
-        List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
-        Map<String, Genome> genomesMap = genomes.stream()
-                .collect(Collectors.toMap(Genome::getName, genome -> genome));
-
-        Genome genome1 = genomesMap.get(genomeName1);
-        Genome genome2 = genomesMap.get(genomeName2);
-        Genome referenceGenome = genomesMap.get(refGenomeName);
-
-        //LOGGER.info("\"Get Comparer Data\":\n{\"Reference\": {},\n\"Genome1\": {},\n\"Genome2\": {}}",
-        //    referenceGenome, genome1, genome2);
-
-        List<RefSquare> refSquares = referenceReprMaker.make(referenceGenome.original);
-        List<RefSquare> g1Squares = referenceReprMaker.make(genome1.original);
-        List<RefSquare> g2Squares = referenceReprMaker.make(genome2.original);
-
-        LOGGER.info("\n\"Reference Squares\":\n{}", refSquares);
-        LOGGER.info("\n\"Genome1 Squares\":\n{}", g1Squares);
-        LOGGER.info("\n\"Genome2 Squares\":\n{}", g2Squares);
-
-        List<SquareList> listOfSquareListsR = fitter.fit(referenceGenome.original, refSquares);
-        List<SquareList> listOfSquareLists1 = fitter.fit(genome1.original, refSquares);
-        List<SquareList> listOfSquareLists2 = fitter.fit(genome2.original, refSquares);
-
-//        LOGGER.info("\n\"Reference Squares\":\n{}", listOfSquareListsR);
-//        LOGGER.info("\n\"Genome1 Squares\":\n{}", listOfSquareLists1);
-//        LOGGER.info("\n\"Genome2 Squares\":\n{}", listOfSquareLists2);
-
-        ComparerData comparerData = genomeReprMaker.makeComparerData(listOfSquareListsR, listOfSquareLists1, listOfSquareLists2);
-
-        LOGGER.info("\nComparer Data: \n{}", comparerData);
-
-        return comparerData;
     }
 
     @RequestMapping(value = "/getSquares", method = RequestMethod.GET)

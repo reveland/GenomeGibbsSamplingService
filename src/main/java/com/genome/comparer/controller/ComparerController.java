@@ -12,7 +12,6 @@ import com.genome.comparer.service.SquareListMaker;
 import com.genome.comparer.tree.TreeMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,12 +28,11 @@ import com.genome.comparer.mcmc.GibbsSampler;
 @RestController
 public class ComparerController {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(GibbsSampler.class);
-
-    @Autowired
-    private SquareListMaker squareListMaker;
-
     private static final String inputGenomePath = "data/destilled.txt";
+    private static final Logger LOGGER = LoggerFactory.getLogger(GibbsSampler.class);
+
+    private SquareListMaker squareListMaker = new SquareListMaker();
+    private FingerprintToGenomeConverter fingerprintToGenomeConverter;
     private GibbsSampler gibbsSamplerTask;
     private Thread gibbsSamplerThread;
 
@@ -45,6 +43,7 @@ public class ComparerController {
         List<Genome> genomes = GenomeReader.read(inputGenomePath);
 
         PooledAdjacencies pooledAdjacencies = new PooledAdjacencies(genomes);
+        fingerprintToGenomeConverter = new FingerprintToGenomeConverter(pooledAdjacencies);
         for (Genome genome : genomes) {
             genome.fingerprint = pooledAdjacencies.fingerprint(genome);
         }
@@ -84,9 +83,7 @@ public class ComparerController {
     public List<Square> getSquares(@RequestParam String genomeName) {
         Tree treeFromTask = gibbsSamplerTask.getTree();
 
-        FingerprintToGenomeConverter fingerprintConverter = new FingerprintToGenomeConverter(treeFromTask.adjacencies);
-
-        List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
+        List<Genome> genomes = treeFromTask.getGenomes(fingerprintToGenomeConverter);
         Map<String, Genome> genomesMap = genomes.stream().collect(Collectors.toMap(Genome::getName, genome -> genome));
 
         Genome genome = genomesMap.get(genomeName);

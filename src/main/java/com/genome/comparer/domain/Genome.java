@@ -9,21 +9,15 @@ import com.genome.comparer.domain.Chromosome;
 
 public class Genome {
 
-    public String name;
-    public ArrayList<int[]> adjacencies;
-    public int[] fingerprint;
-    public List<Chromosome> original;
+    private String name;
+    private List<int[]> adjacencies;
     private boolean circular;
+    private int[] fingerprint;
+    private List<Chromosome> original;
 
     public Genome(String name, List<int[]> adjacencies) {
         this.name = name;
-        this.adjacencies = new ArrayList<>(adjacencies);
-        this.circular = false;
-    }
-
-    public Genome(List<int[]> adjacencies, String name) {
-        this.name = name;
-        this.adjacencies = new ArrayList<>(adjacencies);
+        this.adjacencies = adjacencies;
         this.circular = false;
     }
 
@@ -49,6 +43,22 @@ public class Genome {
 
     public void setCircular(final boolean circular) {
         this.circular = circular;
+    }
+
+    public int[] getFingerprint() {
+        return fingerprint;
+    }
+
+    public void setFingerprint(int[] fingerprint) {
+        this.fingerprint = fingerprint;
+    }
+
+    public List<Chromosome> getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(List<Chromosome> original) {
+        this.original = original;
     }
 
     @Override

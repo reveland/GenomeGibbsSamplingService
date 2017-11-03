@@ -20,6 +20,14 @@ public class Chromosome {
         return adjacencies;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setAdjacencies(List<Integer> adjacencies) {
+        this.adjacencies = adjacencies;
+    }
+
     @Override
     public String toString() {
         return "{\"label\":\"" + label + "\", \"adjacencies\":" + adjacencies + "}";

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.genome.comparer.service.SquareListMaker;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,11 +26,11 @@ public class SquareListMakerTest {
 
     @Test
     public void make() {
-        Genome genome = new Genome(Collections.emptyList(), "genomeName");
-        genome.original = createChromosomes();
+        Genome genome = new Genome("genomeName", Collections.emptyList());
+        genome.setOriginal(createChromosomes());
         List<Square> expected = getExpectedRefSquares();
 
-        List<Square> actual = underTest.make(genome.original);
+        List<Square> actual = underTest.make(genome.getOriginal());
 
         Assert.assertEquals(expected, actual);
     }

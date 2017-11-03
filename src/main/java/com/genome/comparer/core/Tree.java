@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.genome.comparer.domain.Genome;
 import com.genome.comparer.io.GenomeReader;
+import com.genome.comparer.utils.FingerprintToGenomeConverter;
 
 public class Tree {
 
@@ -32,7 +33,7 @@ public class Tree {
             TreeNode current = new TreeNode();
             current.owner = this;
             current.fingerprint = pooledAdjacencies.fingerprint(genome);
-            current.name = genome.name;
+            current.name = genome.getName();
             nodes.add(current);
         }
         while (nodes.size() > 1) {

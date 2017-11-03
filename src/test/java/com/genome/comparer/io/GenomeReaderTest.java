@@ -60,8 +60,8 @@ public class GenomeReaderTest {
     private Genome createGenome(String name, List<int[]> adjacencies, int[] fingerprint, List<Chromosome> original, boolean circular) {
         Genome genome = new Genome(name, adjacencies);
         genome.setCircular(circular);
-        genome.fingerprint = fingerprint;
-        genome.original = original;
+        genome.setFingerprint(fingerprint);
+        genome.setOriginal(original);
         return genome;
     }
 }

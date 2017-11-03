@@ -1,4 +1,4 @@
-package com.genome.comparer.service;
+package com.genome.comparer.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-@Service
 public class SyntenyReCounter {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(SyntenyReCounter.class);

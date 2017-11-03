@@ -22,8 +22,8 @@ public class GenomeReader {
         String chromosomeName = "";
         while ((line = reader.readLine()) != null) {
             if (isGenomeNameLine(line)) {
-                Genome currentGenome = new Genome(adjacencies, genomeName);
-                currentGenome.original = original;
+                Genome currentGenome = new Genome(genomeName, adjacencies);
+                currentGenome.setOriginal(original);
                 currentGenome.setCircular(false);
                 // LOGGER.debug(String.valueOf(currentGenome));
                 genomes.add(currentGenome);
@@ -61,8 +61,8 @@ public class GenomeReader {
             }
         }
 
-        Genome currentGenome = new Genome(adjacencies, genomeName);
-        currentGenome.original = original;
+        Genome currentGenome = new Genome(genomeName, adjacencies);
+        currentGenome.setOriginal(original);
         currentGenome.setCircular(false);
         // LOGGER.debug(String.valueOf(currentGenome));
         genomes.add(currentGenome);
@@ -101,15 +101,15 @@ public class GenomeReader {
         PooledAdjacencies pooledAdjacencies = new PooledAdjacencies(genomes);
         System.out.println("number of pooled deprecatedAdjacencies: " + pooledAdjacencies.getAdjacencies().size());
         for (Genome genome : genomes) {
-            genome.fingerprint = pooledAdjacencies.fingerprint(genome);
+            genome.setFingerprint(pooledAdjacencies.fingerprint(genome));
         }
         // Hamming distances
         for (Genome genomex : genomes) {
             System.out.print(genomex.getName() + " ");
             for (Genome genomey : genomes) {
                 int hamming = 0;
-                for (int i = 0; i < genomex.fingerprint.length; i++) {
-                    if (genomex.fingerprint[i] != genomey.fingerprint[i]) {
+                for (int i = 0; i < genomex.getFingerprint().length; i++) {
+                    if (genomex.getFingerprint()[i] != genomey.getFingerprint()[i]) {
                         hamming++;
                     }
                 }

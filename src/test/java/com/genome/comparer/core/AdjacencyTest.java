@@ -16,7 +16,7 @@ public class AdjacencyTest {
     public void testGetAdjacency() {
         Adjacency adjacency = new Adjacency(TEST_ADJACENCIES);
 
-        int[] actual = adjacency.getAdjacency();
+        int[] actual = adjacency.index;
 
         assertEquals(TEST_ADJACENCIES[0], actual[0]);
         assertEquals(TEST_ADJACENCIES[1], actual[1]);

@@ -21,7 +21,7 @@ public class LoggerAspect {
     @Around("execution(* com.genome.comparer.core.PooledAdjacencies.fingerprint(..))")
     public Object logWarningWhenPooledAdjacencyNotContainsAllAdjacencies(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         Genome genome = (Genome) proceedingJoinPoint.getArgs()[0];
-        int genome_adjacencies_size = genome.adjacencies.size();
+        int genome_adjacencies_size = genome.getAdjacencies().size();
         int[] fingerprint = (int[]) proceedingJoinPoint.proceed();
         if (genome_adjacencies_size != fingerprint.length) {
             LOGGER.warn("Found adjacencies: {}, Number of adjacencies in genome: {}", fingerprint.length, genome_adjacencies_size);

@@ -24,8 +24,8 @@ public class GenomeTest {
         Genome genome = new Genome(GENOME_NAME_1, Arrays.asList(ADJACENCY_1, ADJACENCY_2));
         Chromosome chromosome1 = new Chromosome("label", Collections.singletonList(1));
         Chromosome chromosome2 = new Chromosome("label", Collections.singletonList(1));
-        genome.original = Lists.newArrayList(chromosome1, chromosome2);
-        genome.fingerprint = new int[]{0, 1, 0};
+        genome.setOriginal(Lists.newArrayList(chromosome1, chromosome2));
+        genome.setFingerprint(new int[]{0, 1, 0});
 
         String actual = genome.toString();
 

@@ -14,8 +14,16 @@ public class Square {
         return adjacency;
     }
 
+    public void setAdjacency(int adjacency) {
+        this.adjacency = adjacency;
+    }
+
     public String getLabel() {
         return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override

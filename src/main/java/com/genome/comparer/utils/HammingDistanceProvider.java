@@ -1,14 +1,12 @@
-package com.genome.comparer.service;
+package com.genome.comparer.utils;
 
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import com.genome.comparer.domain.Genome;
 
-@Service
 public class HammingDistanceProvider {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(HammingDistanceProvider.class);
@@ -38,8 +36,8 @@ public class HammingDistanceProvider {
     }
 
     private static int countDistance(final Genome genome1, final Genome genome2) {
-        inspectGenomeFingerprintLengths(genome1.fingerprint, genome2.fingerprint);
-        return countHammingDistance(genome1.fingerprint, genome2.fingerprint);
+        inspectGenomeFingerprintLengths(genome1.getFingerprint(), genome2.getFingerprint());
+        return countHammingDistance(genome1.getFingerprint(), genome2.getFingerprint());
     }
 
     private static int countHammingDistance(final int[] fingerprint1, final int[] fingerprint2) {

@@ -2,6 +2,7 @@ package com.genome.comparer.core;
 
 import com.genome.comparer.domain.Adjacency;
 import com.genome.comparer.domain.Genome;
+import com.genome.comparer.utils.FingerprintToGenomeConverter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -171,7 +172,7 @@ public class TreeNode {
             sankoffsum[0] = sum * sum1;
 
             boolean is1inConflict = false;
-            List<Adjacency> conflicts = owner.adjacencies.adjacencies.get(x).inconflict;
+            List<Adjacency> conflicts = owner.adjacencies.adjacencies.get(x).inConflictWith;
             for (int i = 0; !is1inConflict && i < conflicts.size(); i++) {
                 int y = owner.adjacencies.adjacencies.indexOf(conflicts.get(i));
                 is1inConflict = (fingerprint[y] == 1);

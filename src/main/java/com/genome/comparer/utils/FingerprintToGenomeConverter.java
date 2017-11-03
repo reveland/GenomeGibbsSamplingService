@@ -1,11 +1,12 @@
-package com.genome.comparer.core;
+package com.genome.comparer.utils;
 
-import static com.genome.comparer.service.SyntenyReCounter.makeChains;
-import static com.genome.comparer.service.SyntenyReCounter.reversePair;
+import static com.genome.comparer.utils.SyntenyReCounter.makeChains;
+import static com.genome.comparer.utils.SyntenyReCounter.reversePair;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.domain.Chromosome;
 import com.genome.comparer.domain.Genome;
 
@@ -25,12 +26,12 @@ public class FingerprintToGenomeConverter {
         ArrayList<int[]> originalPairs = new ArrayList<>();
         for (int i = 0; i < fingerprint.length; i++) {
             if (fingerprint[i] == 1) {
-                originalPairs.add(adjacencies.getAdjacencies().get(i).getAdjacency());
+                originalPairs.add(adjacencies.getAdjacencies().get(i).index);
             }
         }
 
-        genome = new Genome(originalPairs, name);
-        genome.fingerprint = fingerprint;
+        genome = new Genome(name, originalPairs);
+        genome.setFingerprint(fingerprint);
 
         ArrayList<int[]> reversedPairs = new ArrayList<>();
         for (int[] pair : originalPairs) {
@@ -44,7 +45,7 @@ public class FingerprintToGenomeConverter {
             Chromosome chromosomeOriginal = new Chromosome(Integer.toString(i + 1), chromosomes.get(i));
             genomeOriginal.add(chromosomeOriginal);
         }
-        genome.original = genomeOriginal;
+        genome.setOriginal(genomeOriginal);
         return genome;
     }
 

@@ -84,9 +84,9 @@ public class PooledAdjacenciesTest {
 
         List<Adjacency> actual = pooledAdjacencies.getAdjacencies();
 
-        assertEquals(Lists.newArrayList(new Adjacency(CONFLICTED_ADJACENCY_1), new Adjacency(CONFLICTED_ADJACENCY_2)).toString(), actual.get(0).getInconflict().toString());
-        assertEquals(Collections.singletonList(new Adjacency(ADJACENCY_1)).toString(), actual.get(4).getInconflict().toString());
-        assertEquals(Collections.singletonList(new Adjacency(ADJACENCY_1)).toString(), actual.get(5).getInconflict().toString());
+        assertEquals(Lists.newArrayList(new Adjacency(CONFLICTED_ADJACENCY_1), new Adjacency(CONFLICTED_ADJACENCY_2)).toString(), actual.get(0).inConflictWith.toString());
+        assertEquals(Collections.singletonList(new Adjacency(ADJACENCY_1)).toString(), actual.get(4).inConflictWith.toString());
+        assertEquals(Collections.singletonList(new Adjacency(ADJACENCY_1)).toString(), actual.get(5).inConflictWith.toString());
     }
 
 

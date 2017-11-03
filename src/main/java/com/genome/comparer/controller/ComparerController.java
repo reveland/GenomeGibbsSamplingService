@@ -1,14 +1,14 @@
 package com.genome.comparer.controller;
 
-import static com.genome.comparer.service.HammingDistanceProvider.createDistanceMatrix;
+import static com.genome.comparer.utils.HammingDistanceProvider.createDistanceMatrix;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.genome.comparer.core.FingerprintToGenomeConverter;
-import com.genome.comparer.service.SquareListMaker;
+import com.genome.comparer.utils.FingerprintToGenomeConverter;
+import com.genome.comparer.utils.SquareListMaker;
 import com.genome.comparer.tree.TreeMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class ComparerController {
         PooledAdjacencies pooledAdjacencies = new PooledAdjacencies(genomes);
         fingerprintToGenomeConverter = new FingerprintToGenomeConverter(pooledAdjacencies);
         for (Genome genome : genomes) {
-            genome.fingerprint = pooledAdjacencies.fingerprint(genome);
+            genome.setFingerprint(pooledAdjacencies.fingerprint(genome));
         }
 
         double[][] matrix = createDistanceMatrix(genomes);
@@ -90,6 +90,6 @@ public class ComparerController {
 
         LOGGER.info("{}:\n{}", genomeName, genome);
 
-        return squareListMaker.make(genome.original);
+        return squareListMaker.make(genome.getOriginal());
     }
 }

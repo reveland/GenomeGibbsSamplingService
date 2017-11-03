@@ -3,7 +3,6 @@ package com.genome.comparer.controller;
 import static com.genome.comparer.service.HammingDistanceProvider.createDistanceMatrix;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,11 +20,9 @@ import com.genome.comparer.core.Genome;
 import com.genome.comparer.core.PooledAdjacencies;
 import com.genome.comparer.core.Tree;
 import com.genome.comparer.tree.UPGMATreeMaker;
-import com.genome.comparer.domain.Chromosome;
 import com.genome.comparer.domain.RefSquare;
 import com.genome.comparer.domain.SquareList;
 import com.genome.comparer.domain.data.ComparerData;
-import com.genome.comparer.domain.repr.GenomeRepr;
 import com.genome.comparer.io.GenomeReader;
 import com.genome.comparer.mcmc.GibbsSampler;
 import com.genome.comparer.utils.FingerprintToGenomeConverter;
@@ -45,7 +42,8 @@ public class ComparerController {
     @Autowired
     private FittedSquareListMaker fitter;
 
-    private String inputGenomePath = "data/test_genome_data.perm";
+    private String inputGenomePath = "data/destilled.txt";
+    //    private String inputGenomePath = "data/test_genome_data.perm";
     private GibbsSampler gibbsSamplerTask;
     private Thread gibbsSamplerThread;
 
@@ -102,7 +100,7 @@ public class ComparerController {
         // fingerprint converter could be field? the adjacencies doesn't change
         FingerprintToGenomeConverter fingerprintConverter = new FingerprintToGenomeConverter(treeFromTask.adjacencies);
 
-        LOGGER.info("PooledAdjacencies: \n{}", treeFromTask.adjacencies);
+        //LOGGER.info("PooledAdjacencies: \n{}", treeFromTask.adjacencies);
 
         List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
         Map<String, Genome> genomesMap = genomes.stream()
@@ -112,24 +110,45 @@ public class ComparerController {
         Genome genome2 = genomesMap.get(genomeName2);
         Genome referenceGenome = genomesMap.get(refGenomeName);
 
-        LOGGER.info("\"Get Comparer Data\":\n{\"Reference\": {},\n\"Genome1\": {},\n\"Genome2\": {}}",
-                referenceGenome, genome1, genome2);
+        //LOGGER.info("\"Get Comparer Data\":\n{\"Reference\": {},\n\"Genome1\": {},\n\"Genome2\": {}}",
+        //    referenceGenome, genome1, genome2);
 
         List<RefSquare> refSquares = referenceReprMaker.make(referenceGenome.original);
+        List<RefSquare> g1Squares = referenceReprMaker.make(genome1.original);
+        List<RefSquare> g2Squares = referenceReprMaker.make(genome2.original);
 
-        LOGGER.info("\n\"Reference Squares\": {}", refSquares);
+        LOGGER.info("\n\"Reference Squares\":\n{}", refSquares);
+        LOGGER.info("\n\"Genome1 Squares\":\n{}", g1Squares);
+        LOGGER.info("\n\"Genome2 Squares\":\n{}", g2Squares);
 
         List<SquareList> listOfSquareListsR = fitter.fit(referenceGenome.original, refSquares);
         List<SquareList> listOfSquareLists1 = fitter.fit(genome1.original, refSquares);
         List<SquareList> listOfSquareLists2 = fitter.fit(genome2.original, refSquares);
 
-        LOGGER.info("\n\"Fitted Square Lists\": \n\"Reference\": {},\n\"Genome1\": {},\n\"Genome2\": {}",
-                listOfSquareListsR, listOfSquareLists1, listOfSquareLists2);
+//        LOGGER.info("\n\"Reference Squares\":\n{}", listOfSquareListsR);
+//        LOGGER.info("\n\"Genome1 Squares\":\n{}", listOfSquareLists1);
+//        LOGGER.info("\n\"Genome2 Squares\":\n{}", listOfSquareLists2);
 
         ComparerData comparerData = genomeReprMaker.makeComparerData(listOfSquareListsR, listOfSquareLists1, listOfSquareLists2);
 
-        //LOGGER.info("\nComparer Data: \n{}", comparerData);
+        LOGGER.info("\nComparer Data: \n{}", comparerData);
 
         return comparerData;
+    }
+
+    @RequestMapping(value = "/getSquares", method = RequestMethod.GET)
+    public List<RefSquare> getSquares(@RequestParam String genomeName) {
+        Tree treeFromTask = gibbsSamplerTask.getTree();
+
+        FingerprintToGenomeConverter fingerprintConverter = new FingerprintToGenomeConverter(treeFromTask.adjacencies);
+
+        List<Genome> genomes = treeFromTask.getGenomes(fingerprintConverter);
+        Map<String, Genome> genomesMap = genomes.stream().collect(Collectors.toMap(Genome::getName, genome -> genome));
+
+        Genome genome = genomesMap.get(genomeName);
+
+        LOGGER.info("{}:\n{}", genomeName, genome);
+
+        return referenceReprMaker.make(genome.original);
     }
 }

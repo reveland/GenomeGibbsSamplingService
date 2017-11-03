@@ -30,7 +30,7 @@ public class ReferenceReprMakerTest {
         genome.original = createChromosomes();
         List<RefSquare> expected = getExpectedRefSquares();
 
-        List<RefSquare> actual = underTest.make(genome);
+        List<RefSquare> actual = underTest.make(genome.original);
 
         Assert.assertEquals(expected, actual);
     }

@@ -102,10 +102,10 @@ public class Tree {
     public void gibbsSampling() {
         int x = random.nextInt(adjacencies.adjacencies.size());
         root.calculateSankoff(x);
-        // System.out.println("numer of optimal labelling: " +
-        //     ((root.sankoffscore[0] <= root.sankoffscore[1] ? root.sankoffsum[0] : 0) +
-        //         (root.sankoffscore[1] <= root.sankoffscore[0] ? root.sankoffsum[1] : 0)) + ", individual scores: " +
-        //     root.sankoffsum[0] + ", " + root.sankoffsum[1]);
+//         System.out.println("numer of optimal labelling: " +
+//             ((root.sankoffscore[0] <= root.sankoffscore[1] ? root.sankoffsum[0] : 0) +
+//                 (root.sankoffscore[1] <= root.sankoffscore[0] ? root.sankoffsum[1] : 0)) + ", individual scores: " +
+//             root.sankoffsum[0] + ", " + root.sankoffsum[1]);
         root.sankoffmark[0] = root.sankoffscore[0] <= root.sankoffscore[1];
         root.sankoffmark[1] = root.sankoffscore[1] <= root.sankoffscore[0];
         root.select(x);

@@ -161,15 +161,15 @@ public class TreeNode {
                     Math.min(rightChild.sankoffscore[0], rightChild.sankoffscore[1] + 1);
             sankoffscore[1] = Math.min(leftChild.sankoffscore[0] + 1, leftChild.sankoffscore[1]) +
                     Math.min(rightChild.sankoffscore[0] + 1, rightChild.sankoffscore[1]);
-            int sum = 0;
-            sum += (leftChild.sankoffscore[0] <= leftChild.sankoffscore[1] + 1 ? leftChild.sankoffsum[0] : 0);
-            sum += (leftChild.sankoffscore[0] >= leftChild.sankoffscore[1] + 1 ? leftChild.sankoffsum[1] : 0);
+            int sumLeft = 0;
+            sumLeft += (leftChild.sankoffscore[0] <= leftChild.sankoffscore[1] + 1 ? leftChild.sankoffsum[0] : 0);
+            sumLeft += (leftChild.sankoffscore[0] >= leftChild.sankoffscore[1] + 1 ? leftChild.sankoffsum[1] : 0);
 
-            int sum1 = 0;
-            sum1 += (rightChild.sankoffscore[0] <= rightChild.sankoffscore[1] + 1 ? rightChild.sankoffsum[0] : 0);
-            sum1 += (rightChild.sankoffscore[0] >= rightChild.sankoffscore[1] + 1 ? rightChild.sankoffsum[1] : 0);
+            int sumRight = 0;
+            sumRight += (rightChild.sankoffscore[0] <= rightChild.sankoffscore[1] + 1 ? rightChild.sankoffsum[0] : 0);
+            sumRight += (rightChild.sankoffscore[0] >= rightChild.sankoffscore[1] + 1 ? rightChild.sankoffsum[1] : 0);
 
-            sankoffsum[0] = sum * sum1;
+            sankoffsum[0] = sumLeft * sumRight;
 
             boolean is1inConflict = false;
             List<Adjacency> conflicts = owner.adjacencies.adjacencies.get(x).inConflictWith;
@@ -180,15 +180,15 @@ public class TreeNode {
             if (is1inConflict) {
                 sankoffsum[1] = 0;
             } else {
-                sum = 0;
-                sum += (leftChild.sankoffscore[0] + 1 <= leftChild.sankoffscore[1] ? leftChild.sankoffsum[0] : 0);
-                sum += (leftChild.sankoffscore[0] + 1 >= leftChild.sankoffscore[1] ? leftChild.sankoffsum[1] : 0);
+                sumLeft = 0;
+                sumLeft += (leftChild.sankoffscore[0] + 1 <= leftChild.sankoffscore[1] ? leftChild.sankoffsum[0] : 0);
+                sumLeft += (leftChild.sankoffscore[0] + 1 >= leftChild.sankoffscore[1] ? leftChild.sankoffsum[1] : 0);
 
-                sum1 = 0;
-                sum1 += (rightChild.sankoffscore[0] + 1 <= rightChild.sankoffscore[1] ? rightChild.sankoffsum[0] : 0);
-                sum1 += (rightChild.sankoffscore[0] + 1 >= rightChild.sankoffscore[1] ? rightChild.sankoffsum[1] : 0);
+                sumRight = 0;
+                sumRight += (rightChild.sankoffscore[0] + 1 <= rightChild.sankoffscore[1] ? rightChild.sankoffsum[0] : 0);
+                sumRight += (rightChild.sankoffscore[0] + 1 >= rightChild.sankoffscore[1] ? rightChild.sankoffsum[1] : 0);
 
-                sankoffsum[1] = sum * sum1;
+                sankoffsum[1] = sumLeft * sumRight;
             }
 
         } else {
@@ -206,14 +206,16 @@ public class TreeNode {
         }
     }
 
-    public void select(int x) {
+    public void select(int selectedFingerprint) {
         if (leftChild != null) {
             sankoffsum[0] *= (sankoffmark[0] ? 1 : 0);
             sankoffsum[1] *= (sankoffmark[1] ? 1 : 0);
             int p = random.nextInt(sankoffsum[0] + sankoffsum[1]);
 
+
+
             if (p < sankoffsum[0]) {
-                fingerprint[x] = 0;
+                fingerprint[selectedFingerprint] = 0;
                 leftChild.sankoffmark[0] =
                         (leftChild.sankoffscore[0] <= leftChild.sankoffscore[1] + 1) && (leftChild.sankoffsum[0] != 0);
                 leftChild.sankoffmark[1] =
@@ -223,7 +225,7 @@ public class TreeNode {
                 rightChild.sankoffmark[1] =
                         (rightChild.sankoffscore[0] >= rightChild.sankoffscore[1] + 1) && (rightChild.sankoffsum[0] != 0);
             } else {
-                fingerprint[x] = 1;
+                fingerprint[selectedFingerprint] = 1;
                 leftChild.sankoffmark[0] =
                         (leftChild.sankoffscore[0] + 1 <= leftChild.sankoffscore[1]) && (leftChild.sankoffsum[0] != 0);
                 leftChild.sankoffmark[1] =
@@ -234,8 +236,8 @@ public class TreeNode {
                         (rightChild.sankoffscore[0] + 1 >= rightChild.sankoffscore[1]) && (rightChild.sankoffsum[0] != 0);
             }
 
-            leftChild.select(x);
-            rightChild.select(x);
+            leftChild.select(selectedFingerprint);
+            rightChild.select(selectedFingerprint);
         }
     }
 
